@@ -1,0 +1,23 @@
+[33mcommit c79368e987d5398745e3ff32fc5df2cc50fd4278[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeature/functionlity-and-rendering[m[33m)[m
+Author: samuel pereira <samuelpereiramuleu@gmail.com>
+Date:   Thu Nov 28 22:12:43 2024 -0300
+
+    run build
+
+[33mcommit da1a0632eccde49ad3c459ac4a602db1d2ddfd1f[m
+Author: samuel pereira <samuelpereiramuleu@gmail.com>
+Date:   Thu Nov 28 22:09:20 2024 -0300
+
+    comecei a renderizar e estruturar o projeto
+
+[33mcommit 5479f62df677327435af977a07db28e471067631[m[33m ([m[1;31morigin/main[m[33m, [m[1;32mmain[m[33m)[m
+Author: samuel pereira <samuelpereiramuleu@gmail.com>
+Date:   Wed Nov 27 23:13:14 2024 -0300
+
+    initial commit
+
+[33mcommit 5db6794b229bdec22af8e5d350496cfa9a6c7b5b[m
+Author: samuel pereira <samuelpereiramuleu@gmail.com>
+Date:   Wed Nov 27 22:31:33 2024 -0300
+
+    Initial commit from Create Next App
