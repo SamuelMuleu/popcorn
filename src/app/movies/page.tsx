@@ -11,6 +11,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
+import { MdFavorite } from "react-icons/md";
 
 interface Movie {
   id: number;
@@ -90,15 +91,18 @@ const MovieCard = () => {
       >
         <CarouselContent>
           {movies.map((movie) => (
-            <CarouselItem key={movie.id} className=" basis-1/3 ">
+            <CarouselItem key={movie.id} className=" basis-1/3 relative ">
               <div className="p-2 flex flex-col items-center justify-center">
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-                  width={200}
-                  height={200}
-                  alt='movie image'
-                  className="w-24 h-40 object-cover rounded-2xl"
-                />
+                <div className="w-full h-40 overflow-hidden rounded-2xl">
+                <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
+                    width={200}
+                    height={200}
+                    alt="movie image"
+                    className="w-full h-full object-contain"
+                  />
+                </div>
                 <p>{movie.title}</p>
               </div>
             </CarouselItem>
@@ -108,36 +112,40 @@ const MovieCard = () => {
         <CarouselNext className="mr-5" />
       </Carousel>
 
-     <div>
-     <h1 className="text-2xl font-semibold mb-6 text-center">
-        Series Populares
-      </h1>
-     <Carousel
-        opts={{
-          align: "start",
-        }}
-        className="w-full max-w-5xl mx-auto"
-      >
-        <CarouselContent>
-          {series.map((serie) => (
-            <CarouselItem key={serie.id} className=" basis-1/3 ">
-              <div className="p-2 flex flex-col items-center justify-center">
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500${serie.backdrop_path}`}
-                  width={200}
-                  height={200}
-                  alt="series "
-                  className="w-24 h-40 object-cover  rounded-2xl"
-                />
-                <p className="text-white">{serie.name}</p>
-              </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="ml-5" />
-        <CarouselNext className="mr-5" />
-      </Carousel>
-     </div>
+      {/*Series*/}
+      <div>
+        <h1 className="text-2xl font-semibold mb-6 text-center">
+          Series Populares
+        </h1>
+        <Carousel
+          opts={{
+            align: "start",
+          }}
+          className="w-full max-w-5xl mx-auto"
+        >
+          <CarouselContent>
+            {series.map((serie) => (
+              <CarouselItem key={serie.id} className=" basis-1/3 relative ">
+                <div className="p-2 flex flex-col items-center justify-center">
+                  <div className="w-full h-40 overflow-hidden">
+                  <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w500${serie.backdrop_path}`}
+                      width={200}
+                      height={200}
+                      alt="movie image"
+                      className="w-full h-full object-contain "
+                    />
+                  </div>
+                  <p className="text-white">{serie.name}</p>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="ml-5" />
+          <CarouselNext className="mr-5" />
+        </Carousel>
+      </div>
     </div>
   );
 };
