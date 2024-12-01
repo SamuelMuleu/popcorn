@@ -8,7 +8,7 @@ export default function Home() {
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
       <h1 className="text-4xl font-black p-3 ">
-        Procure por Filmes{" "}
+
         <span className="flex items-center justify-center">e Series</span>{" "}
       </h1>
 
