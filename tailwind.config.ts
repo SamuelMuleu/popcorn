@@ -10,7 +10,10 @@ export default {
     extend: {
       colors: {
         background: "var(--background)",
-        foreground: "var(--foreground)",
+        gradientColorStops: {
+          'custom-green': '#52B788',
+          'custom-black': '#FFFFFF',
+        },
       },
     },
   },

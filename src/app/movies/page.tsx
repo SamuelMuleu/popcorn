@@ -1,42 +1,50 @@
 "use client";
-import React, { useEffect, useState } from "react";
+
 import axios from "axios";
 import Image from "next/image";
+import React, { useEffect, useState } from "react";
+
 import {
   Carousel,
   CarouselContent,
   CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 
-interface Movies {
+interface Movie {
   id: number;
   title: string;
-  vote_average: number;
   backdrop_path: string;
 }
-
-interface Series {
+interface Serie {
   id: number;
-  title: string;
-  vote_average: number;
+  name: string;
   backdrop_path: string;
 }
 
 const MovieCard = () => {
-  const [movies, setMovies] = useState<Movies[]>([]);
-  const [series, setSeries] = useState<Series[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
+
+  const [series, setSeries] = useState<Serie[]>([]);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/movie/popular?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+          `https://api.themoviedb.org/3/discover/movie`,
+          {
+            params: {
+              api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
+              language: "pt-BR",
+            },
+          }
         );
         setMovies(response.data.results);
       } catch (err) {
-        setError("Failed to fetch movies. Please try again later.");
-        console.log(err);
+        setError("Erro ao carregar filmes. Tente novamente mais tarde.");
+        console.error(err);
       }
     };
 
@@ -44,82 +52,92 @@ const MovieCard = () => {
   }, []);
 
   useEffect(() => {
-    const fetchTv = async () => {
+    const fetchSeries = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/tv/popular?api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`
+          `https://api.themoviedb.org/3/discover/tv`,
+          {
+            params: {
+              api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
+              language: "pt-BR",
+              page: "1",
+            },
+          }
         );
         setSeries(response.data.results);
       } catch (err) {
-        setError("Failed to fetch series. Please try again later.");
-        console.log(err);
+        setError("Erro ao carregar filmes. Tente novamente mais tarde.");
+        console.error(err);
       }
     };
-    fetchTv();
+
+    fetchSeries();
   }, []);
 
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="">
-      <p className="text-2xl font-bold mb-4 text-white opacity-35">Movies</p>
+    <div className="min-h-screen text-white p-4">
+      <h1 className="text-2xl font-semibold mb-6 text-center">
+        Filmes Populares
+      </h1>
 
-      {/* Input */}
-      <div className="mb-6">
-        <input
-          type="text"
-          className="rounded-lg w-[268px] bg-background_input border-t-2 border-r-2 border-l-2 border-green-200 focus:outline-1 pl-8 py-1 focus:outline-green-200 px-2 placeholder:text-lg"
-          placeholder="Procure"
-        />
-      </div>
-
-      {/* Lista de Filmes */}
-      <Carousel className="flex mt-6 flex-wrap">
-        <CarouselContent className="">
+      <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-5xl mx-auto"
+      >
+        <CarouselContent>
           {movies.map((movie) => (
-            <CarouselItem
-              key={movie.id}
-              className="basis-1/3 flex items-center justify-center flex-col"
-            >
-              <div className="relative w-24 h-40">
+            <CarouselItem key={movie.id} className=" basis-1/3 ">
+              <div className="p-2 flex flex-col items-center justify-center">
                 <Image
-                  fill
-                  sizes="(max-width: 768px) 100vw, 300px"
                   src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-                  alt={`Poster of ${movie.title}`}
-                  className="rounded-lg object-cover"
+                  width={200}
+                  height={200}
+                  alt='movie image'
+                  className="w-24 h-40 object-cover rounded-2xl"
                 />
+                <p>{movie.title}</p>
               </div>
-              <div className="mt-2 text-white opacity-70">{movie.title}</div>
             </CarouselItem>
           ))}
         </CarouselContent>
+        <CarouselPrevious className="ml-5" />
+        <CarouselNext className="mr-5" />
       </Carousel>
 
-      <p className="text-2xl font-bold mb-4 text-white opacity-35">Series</p>
-
-      {/* Lista de Séries */}
-      <Carousel className="flex mt-6 flex-wrap">
-        <CarouselContent className="">
-          {series.map((tv) => (
-            <CarouselItem
-              key={tv.id}
-              className="basis-1/3 flex items-center justify-center flex-col"
-            >
-              <div className="relative w-24 h-40">
+     <div>
+     <h1 className="text-2xl font-semibold mb-6 text-center">
+        Series Populares
+      </h1>
+     <Carousel
+        opts={{
+          align: "start",
+        }}
+        className="w-full max-w-5xl mx-auto"
+      >
+        <CarouselContent>
+          {series.map((serie) => (
+            <CarouselItem key={serie.id} className=" basis-1/3 ">
+              <div className="p-2 flex flex-col items-center justify-center">
                 <Image
-                  fill
-                  sizes="(max-width: 768px) 100vw, 300px"
-                  src={`https://image.tmdb.org/t/p/w500${tv.backdrop_path}`}
-                  alt={`Poster of ${tv.title}`}
-                  className="rounded-lg object-cover"
+                  src={`https://image.tmdb.org/t/p/w500${serie.backdrop_path}`}
+                  width={200}
+                  height={200}
+                  alt="series "
+                  className="w-24 h-40 object-cover  rounded-2xl"
                 />
+                <p className="text-white">{serie.name}</p>
               </div>
-              <div className="mt-2 text-white opacity-70">{tv.title}</div>
             </CarouselItem>
           ))}
         </CarouselContent>
+        <CarouselPrevious className="ml-5" />
+        <CarouselNext className="mr-5" />
       </Carousel>
+     </div>
     </div>
   );
 };
