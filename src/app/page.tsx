@@ -2,8 +2,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 export default function Home() {
   return (
-    <section className="flex  gap-10 flex-col items-center justify-center  ">
-      <Avatar className="w-72 h-72 border-2 mt-7 border-gradientColorStops-custom-green ">
+    <section className="flex  md:gap-10 gap-5 flex-col items-center justify-center  ">
+      <Avatar className="w-60 h-60 border-2 mt-7 border-gradientColorStops-custom-green ">
         <AvatarImage src="/assets/perfil.jpeg" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>

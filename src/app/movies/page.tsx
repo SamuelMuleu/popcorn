@@ -17,11 +17,13 @@ interface Movie {
   id: number;
   title: string;
   backdrop_path: string;
+  poster_path:string;
 }
 interface Serie {
   id: number;
   name: string;
   backdrop_path: string;
+  poster_path:string;
 }
 
 const MovieCard = () => {
@@ -43,6 +45,7 @@ const MovieCard = () => {
           }
         );
         setMovies(response.data.results);
+        console.log(response.data.results)
       } catch (err) {
         setError("Erro ao carregar filmes. Tente novamente mais tarde.");
         console.error(err);
@@ -96,11 +99,11 @@ const MovieCard = () => {
                 <div className="w-full h-40 overflow-hidden rounded-2xl">
                 <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
                   <Image
-                    src={`https://image.tmdb.org/t/p/w500${movie.backdrop_path}`}
-                    width={200}
-                    height={200}
+                    src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
+                    width={400}
+                    height={400}
                     alt="movie image"
-                    className="w-full h-full object-contain"
+                    className="md:w-full md:h-full w-36 h-36 object-cover md:object-contain"
                   />
                 </div>
                 <p>{movie.title}</p>
@@ -108,8 +111,8 @@ const MovieCard = () => {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious className="ml-5" />
-        <CarouselNext className="mr-5" />
+        <CarouselPrevious className="ml-5 -mt-16" />
+        <CarouselNext className="mr-5 -mt-16" />
       </Carousel>
 
       {/*Series*/}
@@ -127,14 +130,14 @@ const MovieCard = () => {
             {series.map((serie) => (
               <CarouselItem key={serie.id} className=" basis-1/3 relative ">
                 <div className="p-2 flex flex-col items-center justify-center">
-                  <div className="w-full h-40 overflow-hidden">
+                  <div className="w-full h-40 overflow-hidden rounded-xl">
                   <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
                     <Image
-                      src={`https://image.tmdb.org/t/p/w500${serie.backdrop_path}`}
+                      src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                       width={200}
                       height={200}
                       alt="movie image"
-                      className="w-full h-full object-contain "
+                        className="md:w-full md:h-full w-36 h-36 object-cover md:object-contain"
                     />
                   </div>
                   <p className="text-white">{serie.name}</p>
@@ -142,8 +145,8 @@ const MovieCard = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="ml-5" />
-          <CarouselNext className="mr-5" />
+          <CarouselPrevious className="ml-5 -mt-16" />
+          <CarouselNext className="mr-5 -mt-16" />
         </Carousel>
       </div>
     </div>

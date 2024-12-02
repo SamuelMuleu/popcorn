@@ -1,29 +1,27 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
+import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
 
-import { MdFavorite } from "react-icons/md"
 interface Results {
   name: string;
   title: string;
   backdrop_path: string;
+  poster_path: string;
   id: number;
 }
 
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Results[]>([]);
+  const [favorites, setFavorites] = useState<number[]>([]); // Lista de IDs favoritos
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!query) {
-      setResults([]);
-      return;
-    }
-    if (query === null) {
       setResults([]);
       return;
     }
@@ -56,6 +54,12 @@ const Search = () => {
     fetchResults();
   }, [query]);
 
+  const toggleFavorite = (id: number) => {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
+    );
+  };
+
   return (
     <div className="flex flex-col gap-10 mt-10 items-center justify-center">
       <div className="text-2xl font-black">O que gostaria de assistir?</div>
@@ -74,20 +78,32 @@ const Search = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       {results.length > 0 && (
-        <div className="mt-6 w-[336px] relative bg-gray-800 rounded-md p-4">
+        <div className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
           <h3 className="font-bold text-white">Resultados:</h3>
 
-          <ul className="mt-2 space-y-3">
+          <ul className="mt-5 space-y-3">
             {results.map((item) => (
-              <li key={item.id} className="text-white">
-                <p>{item.title || item.name}</p>
-                <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
+              <li
+                key={item.id}
+                className="text-white flex flex-col items-center justify-center relative"
+              >
+                <button
+                  onClick={() => toggleFavorite(item.id)}
+                  className="absolute left-[255px] top-1 hover:scale-150"
+                >
+                  {favorites.includes(item.id) ? (
+                    <MdFavorite className="text-red-700" />
+                  ) : (
+                    <MdFavoriteBorder className="text-gray-400 hover:text-red-700" />
+                  )}
+                </button>
+
                 <Image
-                  src={`https://image.tmdb.org/t/p/w500${item.backdrop_path}`}
+                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
                   width={200}
                   height={200}
                   alt="movie image"
-                  className="w-full h-full object-contain "
+                  className="md:w-full md:h-full rounded-lg object-contain"
                 />
               </li>
             ))}
