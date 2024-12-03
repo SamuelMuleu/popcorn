@@ -9,6 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
+        bgbutton:"#31373E",
         background: "var(--background)",
         gradientColorStops: {
           'custom-green': '#52B788',

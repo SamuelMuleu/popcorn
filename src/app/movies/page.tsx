@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import axios from "axios";
 import Image from "next/image";
@@ -17,18 +17,18 @@ interface Movie {
   id: number;
   title: string;
   backdrop_path: string;
-  poster_path:string;
+  poster_path: string;
 }
+
 interface Serie {
   id: number;
   name: string;
   backdrop_path: string;
-  poster_path:string;
+  poster_path: string;
 }
 
 const MovieCard = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
-
   const [series, setSeries] = useState<Serie[]>([]);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,7 +45,7 @@ const MovieCard = () => {
           }
         );
         setMovies(response.data.results);
-        console.log(response.data.results)
+        console.log(response.data.results);
       } catch (err) {
         setError("Erro ao carregar filmes. Tente novamente mais tarde.");
         console.error(err);
@@ -94,16 +94,16 @@ const MovieCard = () => {
       >
         <CarouselContent>
           {movies.map((movie) => (
-            <CarouselItem key={movie.id} className=" basis-1/3 relative ">
+            <CarouselItem key={movie.id} className="basis-1/3 relative">
               <div className="p-2 flex flex-col items-center justify-center">
-                <div className="w-full h-40 overflow-hidden rounded-2xl">
-                <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
+                <div className="w-full h-40 overflow-hidden rounded-2xl relative">
+                  <MdFavorite className="absolute top-2 right-2 text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
                   <Image
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                     width={400}
                     height={400}
                     alt="movie image"
-                    className="md:w-full md:h-full w-36 h-36 object-cover md:object-contain"
+                    className="md:w-full md:h-full w-40 h-40 object-cover md:object-contain"
                   />
                 </div>
                 <p>{movie.title}</p>
@@ -115,10 +115,10 @@ const MovieCard = () => {
         <CarouselNext className="mr-5 -mt-16" />
       </Carousel>
 
-      {/*Series*/}
+      {/* Series */}
       <div>
         <h1 className="text-2xl font-semibold mb-6 text-center">
-          Series Populares
+          Séries Populares
         </h1>
         <Carousel
           opts={{
@@ -128,16 +128,16 @@ const MovieCard = () => {
         >
           <CarouselContent>
             {series.map((serie) => (
-              <CarouselItem key={serie.id} className=" basis-1/3 relative ">
+              <CarouselItem key={serie.id} className="basis-1/3 relative">
                 <div className="p-2 flex flex-col items-center justify-center">
-                  <div className="w-full h-40 overflow-hidden rounded-xl">
-                  <MdFavorite className="absolute left-[305px] hover:text-red-700  hover:scale-150  "/>
+                  <div className="w-full h-40 overflow-hidden rounded-xl relative">
+                    <MdFavorite className="absolute top-1 right-1 text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
                     <Image
                       src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                       width={200}
                       height={200}
-                      alt="movie image"
-                        className="md:w-full md:h-full w-36 h-36 object-cover md:object-contain"
+                      alt="serie image"
+                      className="md:w-full md:h-full w-40 h-40 object-cover md:object-contain"
                     />
                   </div>
                   <p className="text-white">{serie.name}</p>

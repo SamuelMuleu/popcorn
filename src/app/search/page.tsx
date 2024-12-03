@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
-import { MdFavorite, MdFavoriteBorder } from "react-icons/md";
+import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
 
@@ -16,7 +16,7 @@ interface Results {
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Results[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]); // Lista de IDs favoritos
+  const [favorites, setFavorites] = useState<number[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -89,12 +89,12 @@ const Search = () => {
               >
                 <button
                   onClick={() => toggleFavorite(item.id)}
-                  className="absolute left-[255px] top-1 hover:scale-150"
+                  className="absolute left-[230px] top-1 hover:scale-150"
                 >
                   {favorites.includes(item.id) ? (
-                    <MdFavorite className="text-red-700" />
+                    <MdFavorite className="text-red-700"  />
                   ) : (
-                    <MdFavoriteBorder className="text-gray-400 hover:text-red-700" />
+                    <MdFavorite className="text-white hover:text-red-700" />
                   )}
                 </button>
 
