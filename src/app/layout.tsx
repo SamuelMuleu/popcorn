@@ -74,9 +74,9 @@ const Layout = ({ children }: LayoutProps) => {
             />
           </Link>
           <Link
-            href="/profile"
+            href="/signin"
             className={`${
-              isActive("/profile")
+              isActive("/signin") || isActive("/register")
                 ? "text-gradientColorStops-custom-green"
                 : "text-white"
             } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green`}

@@ -36,14 +36,16 @@ const MovieCard = () => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          `https://api.themoviedb.org/3/discover/movie`,
+         `https://api.themoviedb.org/3/movie/popular?language=en-US&page=1`,
           {
             params: {
               api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
+             
               language: "pt-BR",
             },
           }
         );
+
         setMovies(response.data.results);
         console.log(response.data.results);
       } catch (err) {
@@ -82,7 +84,7 @@ const MovieCard = () => {
 
   return (
     <div className="min-h-screen text-white p-4">
-      <h1 className="text-2xl font-semibold mb-6 text-center">
+      <h1 className="text-2xl font-semibold mb-6  text-start opacity-25">
         Filmes Populares
       </h1>
 
@@ -96,14 +98,14 @@ const MovieCard = () => {
           {movies.map((movie) => (
             <CarouselItem key={movie.id} className="basis-1/3 relative">
               <div className="p-2 flex flex-col items-center justify-center">
-                <div className="w-full h-40 overflow-hidden rounded-2xl relative">
-                  <MdFavorite className="absolute top-2 right-2 text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
+                <div className="w-full overflow-hidden rounded-2xl relative">
+                  <MdFavorite  className="absolute md:top-0 right-0 md:right-[6.5rem] text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
                   <Image
                     src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
-                    width={400}
-                    height={400}
+                    width={200}
+                    height={200}
                     alt="movie image"
-                    className="md:w-full md:h-full w-40 h-40 object-cover md:object-contain"
+                    className="md:w-full md:h-full  object-cover md:object-contain"
                   />
                 </div>
                 <p>{movie.title}</p>
@@ -117,7 +119,7 @@ const MovieCard = () => {
 
       {/* Series */}
       <div>
-        <h1 className="text-2xl font-semibold mb-6 text-center">
+        <h1 className="text-2xl font-semibold mb-6 -mt-2 md:mt-6 text-start opacity-25">
           Séries Populares
         </h1>
         <Carousel
@@ -130,14 +132,15 @@ const MovieCard = () => {
             {series.map((serie) => (
               <CarouselItem key={serie.id} className="basis-1/3 relative">
                 <div className="p-2 flex flex-col items-center justify-center">
-                  <div className="w-full h-40 overflow-hidden rounded-xl relative">
-                    <MdFavorite className="absolute top-1 right-1 text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
+                  <div className="w-full overflow-hidden rounded-2xl relative">
+                    <MdFavorite className="absolute md:top-0 right-0 md:right-[6.5rem] text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
+                  
                     <Image
                       src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                       width={200}
                       height={200}
                       alt="serie image"
-                      className="md:w-full md:h-full w-40 h-40 object-cover md:object-contain"
+                     className="md:w-full md:h-full object-cover md:object-contain"
                     />
                   </div>
                   <p className="text-white">{serie.name}</p>

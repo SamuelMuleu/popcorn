@@ -4,6 +4,13 @@ import { FaSearch } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface Results {
   name: string;
@@ -78,18 +85,19 @@ const Search = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       {results.length > 0 && (
-        <div className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
+        <Carousel  className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
           <h3 className="font-bold text-white">Resultados:</h3>
 
-          <ul className="mt-5 space-y-3">
+          <CarouselContent className="mt-5 space-y-3">
             {results.map((item) => (
-              <li
+              <CarouselItem
+
                 key={item.id}
-                className="text-white flex flex-col items-center justify-center relative"
+                className="text-white basis-1/2 flex flex-col items-center justify-center relative"
               >
                 <button
                   onClick={() => toggleFavorite(item.id)}
-                  className="absolute left-[230px] top-1 hover:scale-150"
+                  className="absolute top-4 right-1 z-10 hover:scale-150"
                 >
                   {favorites.includes(item.id) ? (
                     <MdFavorite className="text-red-700"  />
@@ -105,10 +113,12 @@ const Search = () => {
                   alt="movie image"
                   className="md:w-full md:h-full rounded-lg object-contain"
                 />
-              </li>
+              </CarouselItem>
             ))}
-          </ul>
-        </div>
+          </CarouselContent>
+          <CarouselPrevious className="ml-16 " />
+        <CarouselNext className="mr-16 " />
+        </Carousel>
       )}
     </div>
   );
