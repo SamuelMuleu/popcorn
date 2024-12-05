@@ -21,7 +21,7 @@ export default function Home() {
       </h1>
 
       <p className="font-bold text-gradientColorStops-custom-green">
-        Favorite na sua lista para não perder!
+        Favorite Filmes e Series na sua lista para não perder!
       </p>
       {!user ? (
       <Link href="/signin">

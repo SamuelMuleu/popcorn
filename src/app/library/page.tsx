@@ -5,7 +5,7 @@ import { db, auth } from "@/lib/firebase";
 import { getDoc, doc } from "firebase/firestore";
 import Image from "next/image";
 import axios from "axios";
-
+import { useAuth } from "@/app/context/AuthContext";
 import {
   Carousel,
   CarouselContent,
@@ -26,6 +26,7 @@ const Library = () => {
   const [favorites, setFavorites] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
+  const { user } = useAuth();
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -68,6 +69,13 @@ const Library = () => {
     fetchFavorites();
   }, []);
 
+  if (!user) {
+    return (
+      <div className="flex items-center font-bold text-gradientColorStops-custom-green justify-center min-h-screen">
+        Faça login para Salvar Seus Favoritos
+      </div>
+    );
+  }
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -94,7 +102,9 @@ const Library = () => {
               >
                 <Image
                   src={`https://image.tmdb.org/t/p/w500/${favorite.poster_path}`}
-                  alt={`Imagem de ${favorite.media_type === "movie" ? "filme" : "série"}`}
+                  alt={`Imagem de ${
+                    favorite.media_type === "movie" ? "filme" : "série"
+                  }`}
                   width={200}
                   height={300}
                   className="w-full h-auto object-cover"
@@ -103,7 +113,6 @@ const Library = () => {
                   <p className="font-semibold">
                     {favorite.title || favorite.name}
                   </p>
-              
                 </div>
               </CarouselItem>
             ))
