@@ -7,6 +7,7 @@ import { useState } from "react";
 import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup, updateProfile} from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -103,7 +104,7 @@ const Register = () => {
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
+              className="w-full px-5 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
               placeholder="Digite sua senha"
             />
           </div>
@@ -112,15 +113,22 @@ const Register = () => {
             {message && <p className="text-green-500">{message}</p>}
             <Button
               type="submit"
-              className="bg-[#31373E] rounded-xl w-44 h-12 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
+              className="bg-[#31373E] rounded-xl w-44 mt-2 border-2 border-gradientColorStops-custom-green flex  hover:bg-gray-800"
             >
-              <p className="font-black text-lg"></p>
+              <p className="font-black  text-lg"></p>
               {loading ? "Criando..." : "Cadastrar"}
             </Button>
             <Button
               onClick={handleGoogleLogin}
-              className="bg-[#db4437] text-white w-44 h-12 rounded-xl hover:bg-[#c1351d]"
+             className="bg-white border mt-2 max-w-48 px-20 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
             >
+                <Image
+                src="/google.svg"
+                width={10}
+                height={10}
+                alt="google logo"
+                className="w-10 h-10 "
+              />
               Cadastrar com Google
             </Button>
           </div>

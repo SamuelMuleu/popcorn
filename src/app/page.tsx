@@ -2,8 +2,13 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { useAuth } from "@/app/context/AuthContext";
+
 
 export default function Home() {
+  const { user } = useAuth();
+
+
   return (
     <section className="flex   gap-5 flex-col items-center justify-center  ">
       <Avatar className="w-60 h-60 border-4 mt-7  border-gradientColorStops-custom-green ">
@@ -18,6 +23,7 @@ export default function Home() {
       <p className="font-bold text-gradientColorStops-custom-green">
         Favorite na sua lista para não perder!
       </p>
+      {!user ? (
       <Link href="/signin">
         <Button
           aria-label="Ir para o perfil"
@@ -25,7 +31,9 @@ export default function Home() {
         >
           <p className="font-black text-xl">Entre</p>
         </Button>
+        
       </Link>
+         ):(null) }
     </section>
   );
 }

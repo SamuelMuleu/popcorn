@@ -4,6 +4,8 @@ import { FaSearch } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
+import { db, auth } from "@/lib/firebase";
+import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
 import {
   Carousel,
   CarouselContent,
@@ -18,12 +20,13 @@ interface Results {
   backdrop_path: string;
   poster_path: string;
   id: number;
+  media_type:string
 }
 
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Results[]>([]);
-  const [favorites, setFavorites] = useState<number[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -61,11 +64,30 @@ const Search = () => {
     fetchResults();
   }, [query]);
 
-  const toggleFavorite = (id: number) => {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((favId) => favId !== id) : [...prev, id]
-    );
+  const saveFavorite = async (id: number, type: "movie" | "tv") => {
+    if (auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const userFavoritesRef = doc(db, "favorites", userId);
+  
+      try {
+        const docSnap = await getDoc(userFavoritesRef);
+        const newFavorite = { id, type };
+  
+        if (docSnap.exists()) {
+          await updateDoc(userFavoritesRef, {
+            favorites: arrayUnion(newFavorite),
+          });
+        } else {
+          await setDoc(userFavoritesRef, {
+            favorites: [newFavorite],
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao salvar favorito: ", err);
+      }
+    }
   };
+  
 
   return (
     <div className="flex flex-col gap-10 mt-10 items-center justify-center">
@@ -86,7 +108,7 @@ const Search = () => {
 
       {results.length > 0 && (
         <Carousel  className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
-          <h3 className="font-bold text-white">Resultados:</h3>
+          <h1 className="text-2xl font-semibold text-start opacity-25">Resultados:</h1>
 
           <CarouselContent className="mt-5 space-y-3">
             {results.map((item) => (
@@ -96,14 +118,12 @@ const Search = () => {
                 className="text-white basis-1/2 flex flex-col items-center justify-center relative"
               >
                 <button
-                  onClick={() => toggleFavorite(item.id)}
-                  className="absolute top-4 right-1 z-10 hover:scale-150"
+                  onClick={() => saveFavorite(item.id,item.media_type as "movie" | "tv")}
+                  className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
                 >
-                  {favorites.includes(item.id) ? (
-                    <MdFavorite className="text-red-700"  />
-                  ) : (
+         
                     <MdFavorite className="text-white hover:text-red-700" />
-                  )}
+      
                 </button>
 
                 <Image
@@ -116,8 +136,8 @@ const Search = () => {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious className="ml-16 " />
-        <CarouselNext className="mr-16 " />
+          <CarouselPrevious className="ml-7 " />
+        <CarouselNext className="mr-7 " />
         </Carousel>
       )}
     </div>

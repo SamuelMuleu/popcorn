@@ -1,7 +1,7 @@
 "use client";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -10,6 +10,8 @@ import {
   signInWithPopup,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
+import Image from "next/image";
+import { useAuth } from "@/app/context/AuthContext";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -18,6 +20,14 @@ const Signin = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const router = useRouter();
+  const { user, loading: authLoading } = useAuth();
+
+  useEffect(() => {
+    if (authLoading) return;
+    if (user) {
+      router.push("/authstate");
+    }
+  }, [user, authLoading, router]);
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -37,7 +47,6 @@ const Signin = () => {
       }
     } catch (error) {
       if (error instanceof Error) {
-      
       } else {
         setError("Erro ao autenticar: Erro desconhecido");
       }
@@ -54,7 +63,7 @@ const Signin = () => {
       const user = result.user;
       console.log("Usuário logado com Google:", user);
       setMessage("Autenticado realizado com sucesso!");
-      router.push("/authstate"); 
+      router.push("/authstate");
     } catch (error) {
       setError("Erro ao fazer login com Google: " + error);
     }
@@ -62,7 +71,7 @@ const Signin = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="p-8 -mt-32 max-w-md mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
+      <div className="p-12 -mt-32 max-w-md mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
         <form onSubmit={handleSignIn}>
           <div className="mb-4">
             <label className="block text-white" htmlFor="email">
@@ -97,14 +106,22 @@ const Signin = () => {
             {message && <p className="text-green-500">{message}</p>}
             <Button
               type="submit"
-              className="bg-[#31373E] rounded-xl w-44 h-12 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
+              className="bg-[#31373E] rounded-xl w-44  mt-2 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
             >
               {loading ? "Entrando..." : "Entrar"}
             </Button>
             <Button
               onClick={handleGoogleLogin}
-              className="bg-[#db4437] text-white w-44 h-12 rounded-xl hover:bg-[#c1351d]"
+              className="bg-white border mt-2 max-w-44 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
             >
+              {" "}
+              <Image
+                src="/google.svg"
+                width={10}
+                height={10}
+                alt="google logo"
+                className="w-10 h-10 "
+              />
               Login com Google
             </Button>
           </div>
@@ -121,5 +138,3 @@ const Signin = () => {
 };
 
 export default Signin;
-
-

@@ -12,6 +12,7 @@ import { PiMonitorPlayFill } from "react-icons/pi";
 import { PiHouseFill } from "react-icons/pi";
 import { FaSearch } from "react-icons/fa";
 import { usePathname } from "next/navigation";
+import AuthProvider from "@/app/context/AuthContext";
 interface LayoutProps {
   children: ReactNode;
 }
@@ -29,11 +30,13 @@ const Layout = ({ children }: LayoutProps) => {
         <title>Popcorn</title>
       </head>
       <body className="flex flex-col bg-gradient-to-br from-gray-600 to-slate-800 min-h-screen">
+        
+      <AuthProvider>
         <header></header>
         <main className="flex-1 p-4">{children}</main>
 
-        {/* Barra de navegação fixa */}
-        <nav className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4 flex justify-around items-center">
+
+        <nav className="fixed bottom-0 left-0 right-0 bg-gray-800 p-4  flex justify-around items-center">
           <Link href="/" className="text-white flex flex-col items-center">
             <PiHouseFill
               size={30}
@@ -54,7 +57,7 @@ const Layout = ({ children }: LayoutProps) => {
             />
           </Link>
           <Link href={"/search"}>
-          <Button className="text-white bg-gradient-to-r from-green-500 to-green-600 border border-green-400 rounded-full shadow-lg flex items-center justify-center -mt-7 mr-2 hover:from-green-400 hover:to-green-500 focus:ring-2 focus:ring-green-300 transition-all duration-300 transform hover:scale-110">
+          <Button className="text-white bg-gradient-to-r from-green-500 to-green-600 border border-green-400 rounded-3xl w-10 shadow-lg flex items-center justify-center -mt-7 p-6 hover:from-green-400 hover:to-green-500 focus:ring-2 focus:ring-green-300 transition-all duration-300 transform hover:scale-110">
             <span className="hover:scale-125 hover:text-gradientColorStops-custom-green">
               <FaSearch size={30} />
             </span>
@@ -87,6 +90,7 @@ const Layout = ({ children }: LayoutProps) => {
             />
           </Link>
         </nav>
+        </AuthProvider>
       </body>
     </html>
   );

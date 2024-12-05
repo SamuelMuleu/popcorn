@@ -1,25 +1,20 @@
-// lib/firebase.ts
-
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
-// Suas credenciais do Firebase
 const firebaseConfig = {
-    apiKey: "AIzaSyA7aBl1VCtYxIa1e0VoAOzP81UYGkvtwLU",
-    authDomain: "popcorn-view.firebaseapp.com",
-    projectId: "popcorn-view",
-    storageBucket: "popcorn-view.firebasestorage.app",
-    messagingSenderId: "206900432073",
-    appId: "1:206900432073:web:581ff6a3cb7f9d4655d118",
-    measurementId: "G-LTMWDZ669P"
+    apiKey: process.env.NEXT_PUBLIC_FIREBASE_API_KEY,
+    authDomain: process.env.NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID,
+    measurementId: process.env.NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID,
 };
 
-// Inicializando o Firebase
 const app = initializeApp(firebaseConfig);
 
-// Exportando os serviços
 export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
