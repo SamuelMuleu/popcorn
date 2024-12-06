@@ -27,13 +27,19 @@ const Signin = () => {
     if (user) {
       router.push("/authstate");
     }
+    
   }, [user, authLoading, router]);
+
+
+
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
     setMessage(null);
     setLoading(true);
+
+    
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -41,6 +47,7 @@ const Signin = () => {
         password
       );
       console.log("Usuário autenticado:", userCredential.user);
+
       if (userCredential.user) {
         setError(null);
         router.push("/authstate");
@@ -113,7 +120,8 @@ const Signin = () => {
             <Button
               onClick={handleGoogleLogin}
               className="bg-white border mt-2 max-w-44 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
-            >
+            aria-label="Login com Google"
+           >
               {" "}
               <Image
                 src="/google.svg"

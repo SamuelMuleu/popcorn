@@ -47,15 +47,18 @@ const Search = () => {
             params: {
               api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
               query,
-              language: "pt-BR",
+
             },
           }
         );
 
         setResults(response.data.results);
-      } catch (err) {
-        setError("Erro ao buscar os resultados.");
-        console.error(err);
+      } catch (error) {
+        if(error instanceof Error){
+
+          setError("Erro ao buscar os resultados.");
+          console.error(error);
+        }
       } finally {
         setLoading(false);
       }

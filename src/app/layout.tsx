@@ -64,9 +64,9 @@ const Layout = ({ children }: LayoutProps) => {
           </Button>
           </Link>
           <Link
-            href="/library"
+            href="/favorites"
             className={`${
-              isActive("/library")
+              isActive("/favorites")
                 ? "text-gradientColorStops-custom-green"
                 : "text-white"
             } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green`}

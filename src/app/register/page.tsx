@@ -4,7 +4,13 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
 
-import { createUserWithEmailAndPassword ,GoogleAuthProvider,signInWithPopup, updateProfile} from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  
+  GoogleAuthProvider,
+  signInWithPopup,
+  updateProfile,
+} from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -23,8 +29,11 @@ const Register = () => {
     setLoading(true);
     setError(null);
     setMessage(null);
-
+    
+    
+    
     try {
+
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -32,17 +41,24 @@ const Register = () => {
       );
       const user = userCredential.user;
       if (user && name) {
-        await updateProfile(user, { displayName: name }); 
+        await updateProfile(user, { displayName: name });
       }
-      
+
       console.log("Usuário criado:", userCredential.user);
       setMessage("Conta criada com Sucesso");
-      router.push("/authstate")
-    } catch (error) {
-      setError("Erro ao criar conta: " + error);
+      router.push("/authstate");
+    } catch (error:unknown) {
+      if(error instanceof Error){
+
+        setError("Erro ao criar conta: Email em uso ");
+      }else{
+        setError("Erro desconhecido")
+      }
     } finally {
       setLoading(false);
-      setError(null)
+   
+
+      
     }
   };
 
@@ -53,8 +69,8 @@ const Register = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
       console.log("Usuário logado com Google:", user);
-      setMessage('Cadastro realizado com sucesso!');
-      router.push("/authstate")
+      setMessage("Cadastro realizado com sucesso!");
+      router.push("/authstate");
     } catch (error) {
       setError("Erro ao fazer login com Google: " + error);
     }
@@ -70,6 +86,7 @@ const Register = () => {
             </label>
             <input
               type="text"
+              required
               id="name"
               name="name"
               value={name}
@@ -86,6 +103,7 @@ const Register = () => {
             <input
               type="email"
               id="email"
+              required
               name="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -102,6 +120,7 @@ const Register = () => {
               type="password"
               id="password"
               name="password"
+              required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="w-full px-5 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
@@ -120,9 +139,9 @@ const Register = () => {
             </Button>
             <Button
               onClick={handleGoogleLogin}
-             className="bg-white border mt-2 max-w-48 px-20 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
+              className="bg-white border mt-2 max-w-48 px-20 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
             >
-                <Image
+              <Image
                 src="/google.svg"
                 width={10}
                 height={10}
