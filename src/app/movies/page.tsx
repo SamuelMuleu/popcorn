@@ -37,18 +37,15 @@ interface Serie {
   media_type: string;
   poster_path: string;
 }
-interface Favorites{
-  id:number;
-  type:string
-}
 
 const MovieCard = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [series, setSeries] = useState<Serie[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [userFavorites, setUserFavorites] = useState<Favorites[]>([]); 
 
-
+  const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
+    []
+  );
 
   const saveFavorite = async (id: number, type: "movie" | "tv") => {
     if (auth.currentUser) {
@@ -71,17 +68,21 @@ const MovieCard = () => {
             await updateDoc(userFavoritesRef, {
               favorites: arrayRemove(newFavorite),
             });
+            setFavorites((prev) =>
+              prev.filter(
+                (favorite) => favorite.id !== id || favorite.type !== type
+              )
+            );
           } else {
             await updateDoc(userFavoritesRef, {
               favorites: arrayUnion(newFavorite),
             });
+            setFavorites((prev) => [...prev, newFavorite]);
           }
         } else {
-
           await setDoc(userFavoritesRef, {
             favorites: [newFavorite],
           });
-          setUserFavorites((prevFavorites) => [...prevFavorites, newFavorite]);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -89,16 +90,31 @@ const MovieCard = () => {
         }
         console.error("Erro ao salvar favorito: ", err);
       }
-      
     }
-    
   };
-  const isFavorite = (id: number, type: "movie" | "tv") => {
-    const result = userFavorites.some(
-      (favorite) => favorite.id === id && favorite.type === type
-    );
 
-    return result;
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (auth.currentUser) {
+        const userId = auth.currentUser.uid;
+        const userFavoritesRef = doc(db, "favorites", userId);
+        try {
+          const docSnap = await getDoc(userFavoritesRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setFavorites(data.favorites || []);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar favoritos: ", err);
+        }
+      }
+    };
+    fetchFavorites();
+  }, []);
+
+  const isFavorite = (id: number, type: string) => {
+    return favorites.some((fav) => fav.id === id && fav.type === type);
   };
 
   useEffect(() => {
@@ -123,7 +139,6 @@ const MovieCard = () => {
 
     fetchMovies();
   }, []);
-
 
   useEffect(() => {
     const fetchSeries = async () => {
@@ -150,7 +165,7 @@ const MovieCard = () => {
   if (error) return <div className="text-red-500">{error}</div>;
 
   return (
-    <div className="min-h-screen text-white p-4">
+    <div className="min-h-screen text-white p-7">
       <h1 className="text-2xl font-semibold mb-6 text-start opacity-25">
         Filmes Populares
       </h1>
@@ -170,6 +185,7 @@ const MovieCard = () => {
               <div className="p-2 flex flex-col items-center justify-center">
                 <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
                   <button
+                    className="absolute top-2 left-24 md:left-48 md:top-1 z-10 hover:scale-150"
                     onClick={() => {
                       const type = movie.media_type
                         ? movie.media_type
@@ -177,12 +193,12 @@ const MovieCard = () => {
                       saveFavorite(movie.id, type as "movie" | "tv");
                     }}
                   >
-                           <MdFavorite
-                      className={`absolute md:top-0 right-0 top-0 md:right-[9.5rem] text-2xl transition-transform duration-200 ${
-                        isFavorite(movie.id, movie.media_type as "movie" | "tv")
-                          ? "text-red-700 hover:scale-125"
-                          : "text-white hover:scale-110"
-                      }`}
+                    <MdFavorite
+                      className={`${
+                        isFavorite(movie.id, movie.media_type || "movie")
+                          ? "text-red-700"
+                          : "text-white"
+                      } hover:scale-150`}
                     />
                   </button>
 
@@ -226,13 +242,20 @@ const MovieCard = () => {
                 <div className="p-2 flex flex-col items-center justify-center">
                   <div className="w-full overflow-hidden rounded-2xl relative mb-10">
                     <button
+                      className="absolute top-2 md:left-48 left-24 md:top-1 z-10 hover:scale-150"
                       onClick={() => {
                         const type = serie.media_type ? serie.media_type : "tv";
                         saveFavorite(serie.id, type as "movie" | "tv");
                       }}
                     >
                       {" "}
-                      <MdFavorite className="absolute md:top-7 right-0 top-0 md:right-[9.5rem] text-white text-2xl hover:text-red-700 hover:scale-125 transition-transform duration-200" />
+                      <MdFavorite
+                        className={`${
+                          isFavorite(serie.id, serie.media_type || "tv")
+                            ? "text-red-700"
+                            : "text-white"
+                        } hover:scale-150`}
+                      />
                     </button>
 
                     <Image

@@ -5,7 +5,14 @@ import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
 import { db, auth } from "@/lib/firebase";
-import { doc, setDoc, getDoc, updateDoc, arrayUnion } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from "firebase/firestore";
 import {
   Carousel,
   CarouselContent,
@@ -20,7 +27,7 @@ interface Results {
   backdrop_path: string;
   poster_path: string;
   id: number;
-  media_type:string
+  media_type: string;
 }
 
 const Search = () => {
@@ -29,6 +36,9 @@ const Search = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
+    []
+  );
 
   useEffect(() => {
     if (!query) {
@@ -47,15 +57,13 @@ const Search = () => {
             params: {
               api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
               query,
-
             },
           }
         );
 
         setResults(response.data.results);
       } catch (error) {
-        if(error instanceof Error){
-
+        if (error instanceof Error) {
           setError("Erro ao buscar os resultados.");
           console.error(error);
         }
@@ -71,15 +79,35 @@ const Search = () => {
     if (auth.currentUser) {
       const userId = auth.currentUser.uid;
       const userFavoritesRef = doc(db, "favorites", userId);
-  
+
       try {
         const docSnap = await getDoc(userFavoritesRef);
         const newFavorite = { id, type };
-  
+
         if (docSnap.exists()) {
           await updateDoc(userFavoritesRef, {
             favorites: arrayUnion(newFavorite),
           });
+          const currentFavorites = docSnap.data()?.favorites || [];
+          const isFavorite = currentFavorites.some(
+            (favorite: { id: number; type: string }) =>
+              favorite.id === id && favorite.type === type
+          );
+          if (isFavorite) {
+            await updateDoc(userFavoritesRef, {
+              favorites: arrayRemove(newFavorite),
+            });
+            setFavorites((prev) =>
+              prev.filter(
+                (favorite) => favorite.id !== id || favorite.type !== type
+              )
+            );
+          } else {
+            await updateDoc(userFavoritesRef, {
+              favorites: arrayUnion(newFavorite),
+            });
+            setFavorites((prev) => [...prev, newFavorite]);
+          }
         } else {
           await setDoc(userFavoritesRef, {
             favorites: [newFavorite],
@@ -90,7 +118,32 @@ const Search = () => {
       }
     }
   };
-  
+
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (auth.currentUser) {
+        const userId = auth.currentUser.uid;
+        const userFavoritesRef = doc(db, "favorites", userId);
+
+        try {
+          const docSnap = await getDoc(userFavoritesRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setFavorites(data.favorites || []);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar favoritos: ", err);
+        }
+      }
+    };
+
+    fetchFavorites();
+  }, []);
+
+  const isFavorite = (id: number, type: string) => {
+    return favorites.some((fav) => fav.id === id && fav.type === type);
+  };
 
   return (
     <div className="flex flex-col gap-10 mt-10 items-center justify-center">
@@ -110,23 +163,30 @@ const Search = () => {
       {error && <p className="text-red-500">{error}</p>}
 
       {results.length > 0 && (
-        <Carousel  className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
-          <h1 className="text-2xl font-semibold text-start opacity-25">Resultados:</h1>
+        <Carousel className="mt-2 w-[336px] relative bg-gray-800 rounded-md p-4">
+          <h1 className="text-2xl font-semibold text-start opacity-25">
+            Resultados:
+          </h1>
 
           <CarouselContent className="mt-5 space-y-3">
             {results.map((item) => (
               <CarouselItem
-
                 key={item.id}
                 className="text-white basis-1/2 flex flex-col items-center justify-center relative"
               >
                 <button
-                  onClick={() => saveFavorite(item.id,item.media_type as "movie" | "tv")}
+                  onClick={() =>
+                    saveFavorite(item.id, item.media_type as "movie" | "tv")
+                  }
                   className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
                 >
-         
-                    <MdFavorite className="text-white hover:text-red-700" />
-      
+                  <MdFavorite
+                    className={`${
+                      isFavorite(item.id, item.media_type)
+                        ? "text-red-700"
+                        : "text-white"
+                    } hover:scale-150`}
+                  />
                 </button>
 
                 <Image
@@ -140,7 +200,7 @@ const Search = () => {
             ))}
           </CarouselContent>
           <CarouselPrevious className="ml-7 " />
-        <CarouselNext className="mr-7 " />
+          <CarouselNext className="mr-7 " />
         </Carousel>
       )}
     </div>

@@ -7,7 +7,7 @@ import { FaUserNinja } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-import { Button } from "@/components/ui/button";
+
 
 const AuthState = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -64,9 +64,7 @@ const AuthState = () => {
             {!user.photoURL && (
               <div className="flex  flex-col gap-2 items-center justify-center my-5  ">
                 <FaUserNinja size={100} />
-                <Button className="bg-[#31373E] rounded-xl w-28 h-10 mt-2 border-2 border-gradientColorStops-custom-green hover:bg-gray-800">
-                  Alterar Foto
-                </Button>
+               
               </div>
             )}
 

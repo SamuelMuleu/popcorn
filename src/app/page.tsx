@@ -4,10 +4,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useAuth } from "@/app/context/AuthContext";
 
-
 export default function Home() {
   const { user } = useAuth();
-
 
   return (
     <section className="flex   gap-5 flex-col items-center justify-center  ">
@@ -20,20 +18,22 @@ export default function Home() {
         <span className="flex items-center justify-center">e Series</span>
       </h1>
 
-      <p className="font-bold text-gradientColorStops-custom-green">
-        Favorite Filmes e Series na sua lista para não perder!
+      <p className="font-bold text-gradientColorStops-custom-green p-3">
+        Favorite Filmes e Series na sua lista para{" "}
+        <span className="flex items-center justify-center">
+          Assistir Depois!
+        </span>
       </p>
       {!user ? (
-      <Link href="/signin">
-        <Button
-          aria-label="Ir para o perfil"
-          className="bg-[#31373E] rounded-xl w-44 h-14 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
-        >
-          <p className="font-black text-xl">Entre</p>
-        </Button>
-        
-      </Link>
-         ):(null) }
+        <Link href="/signin">
+          <Button
+            aria-label="Ir para o perfil"
+            className="bg-[#31373E] rounded-xl w-44 h-14 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
+          >
+            <p className="font-black text-xl">Entre</p>
+          </Button>
+        </Link>
+      ) : null}
     </section>
   );
 }
