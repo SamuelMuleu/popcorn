@@ -6,7 +6,6 @@ import { useState } from "react";
 
 import {
   createUserWithEmailAndPassword,
-  
   GoogleAuthProvider,
   signInWithPopup,
   updateProfile,
@@ -15,6 +14,9 @@ import { auth } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 
+import { FaRegEye } from "react-icons/fa6";
+import { FaRegEyeSlash } from "react-icons/fa";
+
 const Register = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,18 +24,23 @@ const Register = () => {
   const [error, setError] = useState<string | null>(null);
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const tooglePassWordVisibility = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    e.preventDefault();
+    setShowPassword((prevState) => !prevState);
+  };
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError(null);
     setMessage(null);
-    
-    
-    
-    try {
 
+    try {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
@@ -47,18 +54,14 @@ const Register = () => {
       console.log("Usuário criado:", userCredential.user);
       setMessage("Conta criada com Sucesso");
       router.push("/authstate");
-    } catch (error:unknown) {
-      if(error instanceof Error){
-
+    } catch (error: unknown) {
+      if (error instanceof Error) {
         setError("Erro ao criar conta: Email em uso ");
-      }else{
-        setError("Erro desconhecido")
+      } else {
+        setError("Erro desconhecido");
       }
     } finally {
       setLoading(false);
-   
-
-      
     }
   };
 
@@ -117,15 +120,22 @@ const Register = () => {
               Senha:
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               required
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
+              className="w-full px-5 py-2  md:relative border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
               placeholder="Digite sua senha"
             />
+            <button
+              className="md:absolute relative  left-64 bottom-7 md:-top-[2.8rem] md:left-[50rem]"
+              onClick={tooglePassWordVisibility}
+            >
+   
+              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />} 
+            </button>
           </div>
           <div className="flex justify-center items-center flex-col gap-2">
             {error && <p className="text-red-500">{error}</p>}
