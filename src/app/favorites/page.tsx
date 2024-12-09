@@ -14,6 +14,7 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { MdFavorite } from "react-icons/md";
+import { motion } from "motion/react";
 
 interface Favorite {
   id: number;
@@ -110,19 +111,40 @@ const Library = () => {
 
   if (!user) {
     return (
-      <div className="flex items-center font-bold text-gradientColorStops-custom-green justify-center min-h-screen">
+      <motion.div
+        className="flex items-center font-bold text-gradientColorStops-custom-green justify-center min-h-screen"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         Faça login para Salvar Seus Favoritos
-      </div>
+      </motion.div>
     );
   }
+
   if (loading)
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <motion.div
+        className="flex items-center justify-center min-h-screen"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
         Carregando favoritos...
-      </div>
+      </motion.div>
     );
 
-  if (error) return <div className="text-red-500">{error}</div>;
+  if (error)
+    return (
+      <motion.div
+        className="text-red-500"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        {error}
+      </motion.div>
+    );
 
   const removeFavorite = async (id: number, type: "movie" | "tv") => {
     if (!user) return;
@@ -146,10 +168,22 @@ const Library = () => {
   };
 
   return (
-    <div className="min-h-screen text-white md:flex md:flex-col   md:gap-10 p-7">
-      <div className="text-2xl font-semibold  text-start opacity-25">
+    <motion.div
+      className="min-h-screen text-white md:flex md:flex-col md:gap-10 p-7"
+      initial={{ opacity: 0, scale: 0.5, y: 20 }}
+      whileInView={{ opacity: 1, scale: 1, y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
+    >
+      <motion.div
+       initial={{ opacity: 0, scale: 0.5, y: 20 }}
+       whileInView={{ opacity: 1, scale: 1, y: 0 }}
+       viewport={{ once: true }}
+       transition={{ duration: 0.7 }}
+        className="text-2xl font-semibold text-start opacity-25"
+      >
         Filmes Preferidos
-      </div>
+
       <Carousel className="flex items-center justify-center gap-4">
         <CarouselContent>
           {movies.length === 0 ? (
@@ -163,13 +197,18 @@ const Library = () => {
                 <button onClick={() => removeFavorite(movie.id, "movie")}>
                   <MdFavorite className="absolute md:top-10 right-4 top-10 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
                 </button>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                  alt={`Imagem de filme`}
-                  width={200}
-                  height={300}
-                  className="w-full h-auto object-cover"
-                />
+                <motion.div
+
+                  className="overflow-hidden rounded-lg"
+                >
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                    alt={`Imagem de filme`}
+                    width={200}
+                    height={300}
+                    className="w-full h-auto object-cover"
+                  />
+                </motion.div>
                 <div className="mt-2 text-center">
                   <p className="font-semibold">{movie.title}</p>
                 </div>
@@ -180,8 +219,15 @@ const Library = () => {
         <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
         <CarouselNext className="md:mr-56 mr-5 -mt-10" />
       </Carousel>
-
-      <div className="text-2xl font-semibol mt-10 text-start opacity-25">
+      </motion.div>
+      <motion.div
+       initial={{ opacity: 0, scale: 0.5, y: 20 }}
+       whileInView={{ opacity: 1, scale: 1, y: 0 }}
+       viewport={{ once: true }}
+       transition={{ duration: 0.7 }}
+        className="text-2xl font-semibold text-start opacity-25"
+      >
+      <div className="text-2xl font-semibold mt-10 text-start opacity-25">
         Séries Preferidas
       </div>
       <Carousel className="flex items-center justify-center ">
@@ -197,13 +243,18 @@ const Library = () => {
                 <button onClick={() => removeFavorite(tv.id, "tv")}>
                   <MdFavorite className="absolute md:top-10 right-4 top-10 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
                 </button>
-                <Image
-                  src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
-                  alt={`Imagem de série`}
-                  width={200}
-                  height={300}
-                  className="w-full h-auto object-cover"
-                />
+                <motion.div
+
+                  className="overflow-hidden rounded-lg"
+                >
+                  <Image
+                    src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
+                    alt={`Imagem de série`}
+                    width={200}
+                    height={300}
+                    className="w-full h-auto object-cover"
+                  />
+                </motion.div>
                 <div className="mt-2 text-center">
                   <p className="font-semibold">{tv.name}</p>
                 </div>
@@ -214,7 +265,8 @@ const Library = () => {
         <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
         <CarouselNext className="md:mr-56 mr-5 -mt-10" />
       </Carousel>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

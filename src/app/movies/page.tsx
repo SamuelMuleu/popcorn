@@ -3,7 +3,7 @@
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-
+import { motion } from "motion/react";
 import {
   Carousel,
   CarouselContent,
@@ -182,7 +182,13 @@ const MovieCard = () => {
               key={movie.id}
               className="flex-shrink-0 basis-1/1 w-[150px] sm:w-[200px] md:w-[300px] lg:w-[400px]"
             >
-              <div className="p-2 flex flex-col items-center justify-center">
+              <motion.div
+                initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.7 }}
+                className="p-2 flex flex-col items-center justify-center"
+              >
                 <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
                   <button
                     className="absolute top-2 left-24 md:left-48 md:top-1 z-10 hover:scale-150"
@@ -214,7 +220,7 @@ const MovieCard = () => {
                     {movie.title}
                   </p>
                 </div>
-              </div>
+              </motion.div>
             </CarouselItem>
           ))}
         </CarouselContent>
@@ -223,7 +229,13 @@ const MovieCard = () => {
       </Carousel>
 
       {/* Series */}
-      <div className="mt-4">
+      <motion.div
+       initial={{ opacity: 0, scale: 0.5, y: 20 }}
+       whileInView={{ opacity: 1, scale: 1, y: 0 }}
+       viewport={{ once: true }}
+       transition={{ duration: 0.7 }}
+        className="mt-20"
+      >
         <h1 className="text-2xl font-semibold mb-4 text-start opacity-25">
           Séries Populares
         </h1>
@@ -277,7 +289,7 @@ const MovieCard = () => {
           <CarouselPrevious className="ml-5 md:ml-2 -mt-10" />
           <CarouselNext className="md:-mr-1 mr-5 -mt-10" />
         </Carousel>
-      </div>
+      </motion.div>
     </div>
   );
 };

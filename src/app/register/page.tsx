@@ -3,7 +3,7 @@
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useState } from "react";
-
+import { motion } from "motion/react";
 import {
   createUserWithEmailAndPassword,
   GoogleAuthProvider,
@@ -81,7 +81,11 @@ const Register = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen">
-      <div className="p-8 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton  rounded-xl  shadow-md">
+      <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.5 }}
+      className="p-8 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton  rounded-xl  shadow-md">
         <form onSubmit={handleSignUp}>
           <div className="mb-4">
             <label className="block text-white " htmlFor="name">
@@ -168,7 +172,7 @@ const Register = () => {
             Fazer login
           </Link>
         </form>
-      </div>
+      </motion.div>
     </div>
   );
 };

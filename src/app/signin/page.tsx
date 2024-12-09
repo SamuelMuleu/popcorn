@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
@@ -13,6 +12,7 @@ import { auth } from "@/lib/firebase";
 import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
+import { motion } from "motion/react";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -24,9 +24,7 @@ const Signin = () => {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
-  const tooglePassWordVisibility = (
-    e: React.MouseEvent<HTMLButtonElement>
-  ): void => {
+  const togglePasswordVisibility = (e: React.MouseEvent<HTMLButtonElement>): void => {
     e.preventDefault();
     setShowPassword((prevState) => !prevState);
   };
@@ -57,10 +55,7 @@ const Signin = () => {
         router.push("/authstate");
       }
     } catch (error) {
-      if (error instanceof Error) {
-      } else {
-        setError("Erro ao autenticar: Erro desconhecido");
-      }
+      setError(error instanceof Error ? error.message : "Erro desconhecido ao autenticar");
     } finally {
       setLoading(false);
     }
@@ -76,13 +71,20 @@ const Signin = () => {
       setMessage("Autenticado realizado com sucesso!");
       router.push("/authstate");
     } catch (error) {
-      setError("Erro ao fazer login com Google: " + error);
+      setError("Erro ao fazer login com Google: " + (error instanceof Error ? error.message : "Erro desconhecido"));
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
-      <div className="p-12 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
+    <motion.div className="flex justify-center items-center min-h-screen"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}>
+      <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+      className="p-12 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
         <form onSubmit={handleSignIn}>
           <div className="mb-4">
             <label className="block text-white" htmlFor="email">
@@ -90,6 +92,7 @@ const Signin = () => {
             </label>
             <input
               type="email"
+              required
               id="email"
               name="email"
               value={email}
@@ -98,45 +101,47 @@ const Signin = () => {
               placeholder="Digite seu e-mail"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-4 relative">
             <label className="block text-white" htmlFor="password">
               Senha:
             </label>
             <input
               type={showPassword ? "text" : "password"}
               id="password"
+              required
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-5 py-2  md:relative border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
+              className="w-full px-5 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
               placeholder="Digite sua senha"
             />
             <button
-              className="md:absolute relative  left-56 bottom-7 md:-top-[7.8rem] md:left-[49.5rem]"
-              onClick={tooglePassWordVisibility}
-            >  {showPassword ? <FaRegEyeSlash /> : <FaRegEye />} </button>
+              className="absolute top-4 right-4"
+              onClick={togglePasswordVisibility}
+            >
+              {showPassword ? <FaRegEyeSlash className="mt-5" /> : <FaRegEye className="mt-5" />}
+            </button>
           </div>
-          <div className="flex justify-center flex-col gap-3 items-center">
+          <div className="flex flex-col items-center gap-3">
             {error && <p className="text-red-500">{error}</p>}
             {message && <p className="text-green-500">{message}</p>}
             <Button
               type="submit"
-              className="bg-[#31373E] rounded-xl w-44  mt-2 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
+              className="bg-[#31373E] rounded-xl w-44 mt-2 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
             >
               {loading ? "Entrando..." : "Entrar"}
             </Button>
             <Button
               onClick={handleGoogleLogin}
-              className="bg-white border mt-2 max-w-44 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
+              className="bg-white border mt-2 max-w-44 border-black text-black rounded-2xl hover:bg-black hover:text-white"
               aria-label="Login com Google"
             >
-              {" "}
               <Image
                 src="/google.svg"
                 width={10}
                 height={10}
                 alt="google logo"
-                className="w-10 h-10 "
+                className="w-10 h-10"
               />
               Login com Google
             </Button>
@@ -148,8 +153,8 @@ const Signin = () => {
             Criar Conta
           </Link>
         </form>
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

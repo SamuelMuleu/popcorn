@@ -6,8 +6,7 @@ import { onAuthStateChanged, signOut, User } from "firebase/auth";
 import { FaUserNinja } from "react-icons/fa";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-
-
+import { motion } from "motion/react";
 
 const AuthState = () => {
   const [user, setUser] = useState<User | null>(null);
@@ -19,7 +18,6 @@ const AuthState = () => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setUser(user);
       setLoading(false);
- 
     });
 
     return () => unsubscribe();
@@ -37,51 +35,66 @@ const AuthState = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        {" "}
-     Carregando...
-      </div>
+      <motion.div
+        className="flex justify-center items-center min-h-screen"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+      >
+        Carregando...
+      </motion.div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <motion.div
+      className="flex justify-center items-center min-h-screen"
+      initial={{ opacity: 0, scale: 0.5 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="p-8 max-w-md mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
         {user ? (
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-white">
               Bem-vindo, {user.displayName || "Usuário"}
             </h2>
-            {user.photoURL && (
-              <Image
-                src={user.photoURL}
-                width={200}
-                height={200}
-                alt="Foto do usuário"
-                className="w-24 h-24 rounded-full mx-auto mt-4"
-              />
-            )}
-            {!user.photoURL && (
-              <div className="flex  flex-col gap-2 items-center justify-center my-5  ">
+            {user.photoURL ? (
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.5 }}
+              >
+                <Image
+                  src={user.photoURL}
+                  width={200}
+                  height={200}
+                  alt="Foto do usuário"
+                  className="w-24 h-24 rounded-full mx-auto mt-4"
+                />
+              </motion.div>
+            ) : (
+              <div className="flex flex-col gap-2 items-center justify-center my-5">
                 <FaUserNinja size={100} />
-               
               </div>
             )}
 
             <div className="mt-4">
-              <button
+              <motion.button
                 onClick={handleLogout}
                 className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                whileHover={{ scale: 1.1 }}
+                transition={{ duration: 0.2 }}
               >
                 Sair
-              </button>
+              </motion.button>
             </div>
           </div>
         ) : (
           <div></div>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
