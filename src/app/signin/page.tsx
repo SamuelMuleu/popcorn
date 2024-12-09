@@ -12,6 +12,7 @@ import {
 import { auth } from "@/lib/firebase";
 import Image from "next/image";
 import { useAuth } from "@/app/context/AuthContext";
+import { FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 
 const Signin = () => {
   const [email, setEmail] = useState("");
@@ -19,19 +20,23 @@ const Signin = () => {
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
+
+  const tooglePassWordVisibility = (
+    e: React.MouseEvent<HTMLButtonElement>
+  ): void => {
+    e.preventDefault();
+    setShowPassword((prevState) => !prevState);
+  };
 
   useEffect(() => {
     if (authLoading) return;
     if (user) {
       router.push("/authstate");
     }
-    
   }, [user, authLoading, router]);
-
-
-
 
   const handleSignIn = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,7 +44,6 @@ const Signin = () => {
     setMessage(null);
     setLoading(true);
 
-    
     try {
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -99,14 +103,18 @@ const Signin = () => {
               Senha:
             </label>
             <input
-              type="password"
+              type={showPassword ? "text" : "password"}
               id="password"
               name="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-3 py-2 border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
+              className="w-full px-5 py-2  md:relative border bg-gray-600 border-gradientColorStops-custom-green rounded focus:outline-none focus:ring-1 focus:ring-green-500 placeholder-gray-500"
               placeholder="Digite sua senha"
             />
+            <button
+              className="md:absolute relative  left-56 bottom-7 md:-top-[7.8rem] md:left-[49.5rem]"
+              onClick={tooglePassWordVisibility}
+            >  {showPassword ? <FaRegEyeSlash /> : <FaRegEye />} </button>
           </div>
           <div className="flex justify-center flex-col gap-3 items-center">
             {error && <p className="text-red-500">{error}</p>}
@@ -120,8 +128,8 @@ const Signin = () => {
             <Button
               onClick={handleGoogleLogin}
               className="bg-white border mt-2 max-w-44 border-black text-black  rounded-2xl hover:bg-black hover:text-white "
-            aria-label="Login com Google"
-           >
+              aria-label="Login com Google"
+            >
               {" "}
               <Image
                 src="/google.svg"
