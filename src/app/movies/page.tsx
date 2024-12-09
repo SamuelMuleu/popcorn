@@ -21,7 +21,7 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { MdFavorite } from "react-icons/md";
-import { motion } from "motion/react"
+import { motion } from "motion/react";
 interface Movie {
   id: number;
   title: string;
@@ -229,13 +229,7 @@ const MovieCard = () => {
       </Carousel>
 
       {/* Series */}
-      <motion.div
-       initial={{ opacity: 0, scale: 0.5, y: 20 }}
-       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-       viewport={{ once: true }}
-       transition={{ duration: 0.7 }}
-        className="mt-20"
-      >
+      <motion.div className="mt-20">
         <h1 className="text-2xl font-semibold mb-4 text-start opacity-25">
           Séries Populares
         </h1>
@@ -251,7 +245,13 @@ const MovieCard = () => {
                 key={serie.id}
                 className="flex-shrink-0 basis-1/1 w-[150px] sm:w-[200px] md:w-[300px] lg:w-[400px] relative"
               >
-                <div className="p-2 flex flex-col items-center justify-center">
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.7 }}
+                  className="p-2 flex flex-col items-center justify-center"
+                >
                   <div className="w-full overflow-hidden rounded-2xl relative mb-10">
                     <button
                       className="absolute top-2 md:left-48 left-24 md:top-1 z-10 hover:scale-150"
@@ -282,7 +282,7 @@ const MovieCard = () => {
                       {serie.name}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               </CarouselItem>
             ))}
           </CarouselContent>
