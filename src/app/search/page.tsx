@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, ChangeEvent } from "react";
 import { FaSearch } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import axios from "axios";
@@ -164,7 +164,7 @@ const Search = () => {
           placeholder="Procure"
           className="w-[336px] pl-12 p-2 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-500"
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={(e:ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
         />
         <motion.div
           initial={{ opacity: 1, scale: 1 }}
