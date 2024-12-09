@@ -8,8 +8,8 @@ export default function Home() {
   const { user } = useAuth();
 
   return (
-    <section className="flex   gap-5 flex-col items-center justify-center  ">
-      <Avatar className="w-60 h-60 border-4 mt-7  border-gradientColorStops-custom-green ">
+    <section className="flex md:gap-2  gap-5 flex-col items-center justify-center  ">
+      <Avatar className="w-60 h-60 border-4 md:mt-2 mt-7  border-gradientColorStops-custom-green ">
         <AvatarImage src="/assets/popcorn.svg" />
         <AvatarFallback>CN</AvatarFallback>
       </Avatar>
