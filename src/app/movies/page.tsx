@@ -3,7 +3,7 @@
 import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
-import { motion } from "motion/react";
+
 import {
   Carousel,
   CarouselContent,
@@ -21,7 +21,7 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { MdFavorite } from "react-icons/md";
-
+import { motion } from "motion/react"
 interface Movie {
   id: number;
   title: string;
