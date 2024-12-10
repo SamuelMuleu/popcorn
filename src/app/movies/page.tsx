@@ -229,7 +229,7 @@ const MovieCard = () => {
       </Carousel>
 
       {/* Series */}
-      <motion.div className="mt-20">
+      <motion.div className="mt-10">
         <h1 className="text-2xl font-semibold mb-4 text-start opacity-25">
           Séries Populares
         </h1>

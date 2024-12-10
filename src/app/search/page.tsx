@@ -5,6 +5,7 @@ import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
 import { db, auth } from "@/lib/firebase";
+import { motion } from "motion/react";
 import {
   doc,
   setDoc,
@@ -20,7 +21,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { motion } from "motion/react";
 
 interface Results {
   name: string;
@@ -34,6 +34,7 @@ interface Results {
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Results[]>([]);
+
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
@@ -147,32 +148,20 @@ const Search = () => {
 
   return (
     <div className="flex flex-col gap-10 mt-10 items-center justify-center">
-      <motion.div
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
-        className="text-2xl font-black"
-      >
-        O que gostaria de assistir?
-      </motion.div>
-      <form className="relative">
-        <motion.input
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
+      <div className="text-2xl font-black">O que gostaria de assistir?</div>
+      <form className="relative" onSubmit={(e: React.FormEvent<HTMLFormElement>)=>
+        e.preventDefault()
+      }>
+        <input
           type="text"
           placeholder="Procure"
           className="w-[336px] pl-12 p-2 bg-gray-800 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 placeholder-gray-500"
           value={query}
-          onChange={(e:ChangeEvent<HTMLInputElement>) => setQuery(e.target.value)}
+          onChange={(e: ChangeEvent<HTMLInputElement>) =>
+            setQuery(e.target.value)
+          }
         />
-        <motion.div
-          initial={{ opacity: 1, scale: 1 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
-        >
-          <FaSearch className="absolute top-3 left-4 text-gray-500" />
-        </motion.div>
+        <FaSearch className="absolute top-3 left-4 text-gray-500" />
       </form>
 
       {loading && <p>Carregando...</p>}
@@ -186,37 +175,40 @@ const Search = () => {
 
           <CarouselContent className="mt-5 space-y-3">
             {results.map((item) => (
-              <motion.div
+              <CarouselItem
                 key={item.id}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
+                className="text-white basis-1/2 flex flex-col items-center justify-center relative"
               >
-                <CarouselItem className="text-white basis-1/2 flex flex-col items-center justify-center relative">
-                  <button
-                    onClick={() =>
-                      saveFavorite(item.id, item.media_type as "movie" | "tv")
-                    }
-                    className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
-                  >
-                    <MdFavorite
-                      className={`${
-                        isFavorite(item.id, item.media_type)
-                          ? "text-red-700"
-                          : "text-white"
-                      } hover:scale-150`}
-                    />
-                  </button>
+                <motion.div
+                 initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ duration: 0.7 }}>
 
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
-                    width={200}
-                    height={200}
-                    alt="movie image"
-                    className="md:w-full md:h-full rounded-lg object-contain"
+                <button
+                  onClick={() =>
+                    saveFavorite(item.id, item.media_type as "movie" | "tv")
+                  }
+                  className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
+                >
+                  <MdFavorite
+                    className={`${
+                      isFavorite(item.id, item.media_type)
+                        ? "text-red-700"
+                        : "text-white"
+                    } hover:scale-150`}
                   />
-                </CarouselItem>
-              </motion.div>
+                </button>
+
+                <Image
+                  src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
+                  width={200}
+                  height={200}
+                  alt="movie image"
+                  className="md:w-full md:h-full rounded-lg object-contain"
+                />
+                </motion.div>
+              </CarouselItem>
             ))}
           </CarouselContent>
           <CarouselPrevious className="ml-7 " />

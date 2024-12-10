@@ -168,23 +168,11 @@ const Library = () => {
   };
 
   return (
-    <motion.div
-      className="min-h-screen text-white md:flex md:flex-col md:gap-10 p-7"
-      initial={{ opacity: 0, scale: 0.5, y: 20 }}
-      whileInView={{ opacity: 1, scale: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.7 }}
-    >
-      <motion.div
-       initial={{ opacity: 0, scale: 0.5, y: 20 }}
-       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-       viewport={{ once: true }}
-       transition={{ duration: 0.7 }}
-        className="text-2xl font-semibold text-start opacity-25"
-      >
+    <div className="min-h-screen text-white p-7">
+      <h1 className="text-2xl font-semibold text-start opacity-25">
         Filmes Preferidos
-
-      <Carousel className="flex items-center justify-center gap-4">
+      </h1>
+      <Carousel className="w-full max-w-5xl mx-auto">
         <CarouselContent>
           {movies.length === 0 ? (
             <div>Você não tem filmes favoritos ainda.</div>
@@ -192,15 +180,12 @@ const Library = () => {
             movieDetails.map((movie: Movie) => (
               <CarouselItem
                 key={movie.id}
-                className="md:w-[200px] w-48 basis-1/1 relative p-4 "
+                className="md:w-[200px] basis-1/1 w-48 basis-1/1 relative p-4 "
               >
                 <button onClick={() => removeFavorite(movie.id, "movie")}>
-                  <MdFavorite className="absolute md:top-10 right-4 top-10 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
+                  <MdFavorite className="absolute md:top-14 right-4 top-14 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
                 </button>
-                <motion.div
-
-                  className="overflow-hidden rounded-lg"
-                >
+                <motion.div className="overflow-hidden rounded-lg">
                   <Image
                     src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
                     alt={`Imagem de filme`}
@@ -219,54 +204,51 @@ const Library = () => {
         <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
         <CarouselNext className="md:mr-56 mr-5 -mt-10" />
       </Carousel>
-      </motion.div>
+
       <motion.div
-       initial={{ opacity: 0, scale: 0.5, y: 20 }}
-       whileInView={{ opacity: 1, scale: 1, y: 0 }}
-       viewport={{ once: true }}
-       transition={{ duration: 0.7 }}
+        initial={{ opacity: 0, scale: 0.5, y: 20 }}
+        whileInView={{ opacity: 1, scale: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.7 }}
         className="text-2xl font-semibold text-start opacity-25"
       >
-      <div className="text-2xl font-semibold mt-10 text-start opacity-25">
-        Séries Preferidas
-      </div>
-      <Carousel className="flex items-center justify-center ">
-        <CarouselContent>
-          {tvShows.length === 0 ? (
-            <div>Você não tem séries favoritas ainda.</div>
-          ) : (
-            tvShowDetails.map((tv: Serie) => (
-              <CarouselItem
-                key={tv.id}
-                className="md:w-[200px] w-48 basis-1/1 relative p-4 "
-              >
-                <button onClick={() => removeFavorite(tv.id, "tv")}>
-                  <MdFavorite className="absolute md:top-10 right-4 top-10 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
-                </button>
-                <motion.div
-
-                  className="overflow-hidden rounded-lg"
+        <div className="text-2xl font-semibold mt-10 text-start opacity-25">
+          Séries Preferidas
+        </div>
+        <Carousel className="flex items-center justify-center ">
+          <CarouselContent>
+            {tvShows.length === 0 ? (
+              <div>Você não tem séries favoritas ainda.</div>
+            ) : (
+              tvShowDetails.map((tv: Serie) => (
+                <CarouselItem
+                  key={tv.id}
+                  className="md:w-[200px] w-48 basis-1/1 relative p-4 "
                 >
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
-                    alt={`Imagem de série`}
-                    width={200}
-                    height={300}
-                    className="w-full h-auto object-cover"
-                  />
-                </motion.div>
-                <div className="mt-2 text-center">
-                  <p className="font-semibold">{tv.name}</p>
-                </div>
-              </CarouselItem>
-            ))
-          )}
-        </CarouselContent>
-        <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
-        <CarouselNext className="md:mr-56 mr-5 -mt-10" />
-      </Carousel>
+                  <button onClick={() => removeFavorite(tv.id, "tv")}>
+                    <MdFavorite className="absolute md:top-14 right-4 top-14 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
+                  </button>
+                  <motion.div className="overflow-hidden rounded-lg">
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
+                      alt={`Imagem de série`}
+                      width={200}
+                      height={300}
+                      className="w-full h-auto object-cover"
+                    />
+                  </motion.div>
+                  <div className="mt-2 text-center">
+                    <p className="font-semibold">{tv.name}</p>
+                  </div>
+                </CarouselItem>
+              ))
+            )}
+          </CarouselContent>
+          <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 md:left-10 md:top-1/2 md:translate-y-0 -mt-0" />
+          <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 md:right-10 md:top-1/2 md:translate-y-0 -mt-0" />
+        </Carousel>
       </motion.div>
-    </motion.div>
+    </div>
   );
 };
 

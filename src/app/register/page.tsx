@@ -52,7 +52,7 @@ const Register = () => {
       }
 
       console.log("Usuário criado:", userCredential.user);
-      setMessage("Conta criada com Sucesso");
+      setMessage("Conta criada com Sucesso! Aguarde Redirecionamento");
       router.push("/authstate");
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -143,7 +143,7 @@ const Register = () => {
           </div>
           <div className="flex justify-center items-center flex-col gap-2">
             {error && <p className="text-red-500">{error}</p>}
-            {message && <p className="text-green-500">{message}</p>}
+            {message && <p className="flex items-center justify-center text-green-500">{message}</p>}
             <Button
               type="submit"
               className="bg-[#31373E] rounded-xl w-44 mt-2 border-2 border-gradientColorStops-custom-green flex  hover:bg-gray-800"
