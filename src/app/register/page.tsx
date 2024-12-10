@@ -82,10 +82,11 @@ const Register = () => {
   return (
     <div className="flex justify-center items-center min-h-screen">
       <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.5 }}
-      className="p-8 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton  rounded-xl  shadow-md">
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5 }}
+        className="p-8 -mt-32 w-96 mx-auto border border-gradientColorStops-custom-green bg-bgbutton  rounded-xl  shadow-md"
+      >
         <form onSubmit={handleSignUp}>
           <div className="mb-4">
             <label className="block text-white " htmlFor="name">
@@ -137,13 +138,20 @@ const Register = () => {
               className="md:absolute relative  left-64 bottom-7 md:-top-[2.8rem] md:left-[50rem]"
               onClick={tooglePassWordVisibility}
             >
-   
-              {showPassword ? <FaRegEyeSlash /> : <FaRegEye />} 
+              {showPassword ? (
+                <FaRegEyeSlash className="mt-5" />
+              ) : (
+                <FaRegEye className="mt-5" />
+              )}
             </button>
           </div>
           <div className="flex justify-center items-center flex-col gap-2">
             {error && <p className="text-red-500">{error}</p>}
-            {message && <p className="flex items-center justify-center text-green-500">{message}</p>}
+            {message && (
+              <p className="flex items-center justify-center text-green-500">
+                {message}
+              </p>
+            )}
             <Button
               type="submit"
               className="bg-[#31373E] rounded-xl w-44 mt-2 border-2 border-gradientColorStops-custom-green flex  hover:bg-gray-800"
