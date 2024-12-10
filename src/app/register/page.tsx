@@ -139,9 +139,9 @@ const Register = () => {
               onClick={tooglePassWordVisibility}
             >
               {showPassword ? (
-                <FaRegEyeSlash className="mt-5" />
+                <FaRegEyeSlash className=" md:mt-0 lg:-ml-5 " />
               ) : (
-                <FaRegEye className="mt-5" />
+                <FaRegEye className=" md:mt-0 lg:-ml-5" />
               )}
             </button>
           </div>
