@@ -13,8 +13,9 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { MdFavorite } from "react-icons/md";
 import { motion } from "motion/react";
+import Link from "next/link";
+import ButtonFavorite from "@/components/ButtonFavorite";
 
 interface Favorite {
   id: number;
@@ -39,7 +40,7 @@ interface Serie {
 }
 
 const Library = () => {
-  const [movies, setMovies] = useState<Favorite[]>([]);
+  const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTvShows] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
@@ -68,9 +69,8 @@ const Library = () => {
             setMovies(favoriteMovies);
             setTvShows(favoriteTvShows);
 
-            const movieIds = favoriteMovies.map((movie: Movie) => movie.id);
-
-            const tvShowIds = favoriteTvShows.map((tv: Serie) => tv.id);
+            const movieIds = favoriteMovies.map((movie: Favorite) => movie.id);
+            const tvShowIds = favoriteTvShows.map((tv: Favorite) => tv.id);
 
             const moviePromises = movieIds.map((id: number) =>
               axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
@@ -109,44 +109,8 @@ const Library = () => {
     }
   }, [user]);
 
-  if (!user) {
-    return (
-      <motion.div
-        className="flex items-center font-bold text-gradientColorStops-custom-green justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        Faça login para Salvar Seus Favoritos
-      </motion.div>
-    );
-  }
 
-  if (loading)
-    return (
-      <motion.div
-        className="flex items-center justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        Carregando favoritos...
-      </motion.div>
-    );
-
-  if (error)
-    return (
-      <motion.div
-        className="text-red-500"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5 }}
-      >
-        {error}
-      </motion.div>
-    );
-
-  const removeFavorite = async (id: number, type: "movie" | "tv") => {
+   const removeFavorite = async (id: number, type: "movie" | "tv") => {
     if (!user) return;
 
     try {
@@ -167,6 +131,78 @@ const Library = () => {
     }
   };
 
+  if (!user) {
+
+    return (
+
+      <motion.div
+
+        className="flex items-center font-bold text-gradientColorStops-custom-green justify-center min-h-screen"
+
+        initial={{ opacity: 0 }}
+
+        animate={{ opacity: 1 }}
+
+        transition={{ duration: 0.5 }}
+
+      >
+
+        Faça login para Salvar Seus Favoritos
+
+      </motion.div>
+
+    );
+
+  }
+
+
+
+  if (loading)
+
+    return (
+
+      <motion.div
+
+        className="flex items-center justify-center min-h-screen"
+
+        initial={{ opacity: 0 }}
+
+        animate={{ opacity: 1 }}
+
+        transition={{ duration: 0.5 }}
+
+      >
+
+        Carregando favoritos...
+
+      </motion.div>
+
+    );
+
+
+
+  if (error)
+
+    return (
+
+      <motion.div
+
+        className="text-red-500"
+
+        initial={{ opacity: 0 }}
+
+        animate={{ opacity: 1 }}
+
+        transition={{ duration: 0.5 }}
+
+      >
+
+        {error}
+
+      </motion.div>
+
+    );
+
   return (
     <div className="min-h-screen text-white p-7">
       <h1 className="text-2xl font-semibold text-start opacity-25">
@@ -175,28 +211,33 @@ const Library = () => {
       <Carousel className="w-full max-w-5xl mx-auto">
         <CarouselContent>
           {movies.length === 0 ? (
-            <div>Você não tem filmes favoritos ainda.</div>
+            <div className="pl-4">Você não tem filmes favoritos ainda.</div>
           ) : (
             movieDetails.map((movie: Movie) => (
               <CarouselItem
                 key={movie.id}
-                className="md:w-[200px] basis-1/1 w-48 basis-1/1 relative p-4 "
+                className="md:w-[200px] w-48 basis-1/2 md:basis-1/4 lg:basis-1/5 relative p-4"
               >
-                <button onClick={() => removeFavorite(movie.id, "movie")}>
-                  <MdFavorite className="absolute md:top-14 right-4 top-14 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
-                </button>
-                <motion.div className="overflow-hidden rounded-lg">
-                  <Image
-                    src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                    alt={`Imagem de filme`}
-                    width={200}
-                    height={300}
-                    className="w-full h-auto object-cover"
+                <Link href={`/details/movie/${movie.id}`}>
+                  {/* 2. USE O NOVO COMPONENTE AQUI */}
+                  <ButtonFavorite
+                    id={movie.id}
+                    type="movie"
+                    onClick={removeFavorite}
                   />
-                </motion.div>
-                <div className="mt-2 text-center">
-                  <p className="font-semibold">{movie.title}</p>
-                </div>
+                  <motion.div className="overflow-hidden rounded-lg">
+                    <Image
+                      src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                      alt={`Imagem de filme`}
+                      width={200}
+                      height={300}
+                      className="w-full h-auto object-cover"
+                    />
+                  </motion.div>
+                  <div className="mt-2 text-center">
+                    <p className="font-semibold">{movie.title}</p>
+                  </div>
+                </Link>
               </CarouselItem>
             ))
           )}
@@ -205,29 +246,27 @@ const Library = () => {
         <CarouselNext className="md:mr-56 mr-5 -mt-10" />
       </Carousel>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.5, y: 20 }}
-        whileInView={{ opacity: 1, scale: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.7 }}
-        className="text-2xl font-semibold text-start opacity-25"
-      >
-        <div className="text-2xl font-semibold mt-10 text-start opacity-25">
-          Séries Preferidas
-        </div>
-        <Carousel className="flex items-center justify-center ">
-          <CarouselContent>
-            {tvShows.length === 0 ? (
-              <div>Você não tem séries favoritas ainda.</div>
-            ) : (
-              tvShowDetails.map((tv: Serie) => (
-                <CarouselItem
-                  key={tv.id}
-                  className="md:w-[200px] w-48 basis-1/1 relative p-4 "
-                >
-                  <button onClick={() => removeFavorite(tv.id, "tv")}>
-                    <MdFavorite className="absolute md:top-14 right-4 top-14 md:right-4 hover:text-white text-2xl text-red-700 hover:scale-125 transition-transform duration-200" />
-                  </button>
+      {/* Seção de Séries */}
+      <div className="text-2xl font-semibold mt-10 text-start opacity-25">
+        Séries Preferidas
+      </div>
+      <Carousel className="w-full max-w-5xl mx-auto">
+        <CarouselContent>
+          {tvShows.length === 0 ? (
+            <div className="pl-4">Você não tem séries favoritas ainda.</div>
+          ) : (
+            tvShowDetails.map((tv: Serie) => (
+              <CarouselItem
+                key={tv.id}
+                className="md:w-[200px] w-48 basis-1/2 md:basis-1/4 lg:basis-1/5 relative p-4"
+              >
+                <Link href={`/details/tv/${tv.id}`}>
+                  {/* 3. USE O MESMO COMPONENTE PARA SÉRIES */}
+                  <ButtonFavorite
+                    id={tv.id}
+                    type="tv"
+                    onClick={removeFavorite}
+                  />
                   <motion.div className="overflow-hidden rounded-lg">
                     <Image
                       src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
@@ -240,14 +279,15 @@ const Library = () => {
                   <div className="mt-2 text-center">
                     <p className="font-semibold">{tv.name}</p>
                   </div>
-                </CarouselItem>
-              ))
-            )}
-          </CarouselContent>
-          <CarouselPrevious className="absolute left-2 top-1/2 transform -translate-y-1/2 md:left-10 md:top-1/2 md:translate-y-0 -mt-0" />
-          <CarouselNext className="absolute right-2 top-1/2 transform -translate-y-1/2 md:right-10 md:top-1/2 md:translate-y-0 -mt-0" />
-        </Carousel>
-      </motion.div>
+                </Link>
+              </CarouselItem>
+            ))
+          )}
+        </CarouselContent>
+        {/* Ajuste nos botões do carrossel para melhor posicionamento */}
+        <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
+        <CarouselNext className="md:mr-56 mr-5 -mt-10" />
+      </Carousel>
     </div>
   );
 };

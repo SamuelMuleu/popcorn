@@ -4,6 +4,7 @@ import { FaSearch } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import axios from "axios";
 import Image from "next/image";
+ import Link from "next/link";
 import { db, auth } from "@/lib/firebase";
 import { motion } from "motion/react";
 import {
@@ -179,6 +180,7 @@ const Search = () => {
                 key={item.id}
                 className="text-white basis-1/2 flex flex-col items-center justify-center relative"
               >
+                 <Link href={`/details/${item.media_type}/${item.id}`}>
                 <motion.div
                  initial={{ opacity: 0, scale: 0.5, y: 20 }}
                  whileInView={{ opacity: 1, scale: 1, y: 0 }}
@@ -186,19 +188,24 @@ const Search = () => {
                  transition={{ duration: 0.7 }}>
 
                 <button
-                  onClick={() =>
-                    saveFavorite(item.id, item.media_type as "movie" | "tv")
-                  }
-                  className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
-                >
-                  <MdFavorite
-                    className={`${
-                      isFavorite(item.id, item.media_type)
-                        ? "text-red-700"
-                        : "text-white"
-                    } hover:scale-150`}
-                  />
-                </button>
+  onClick={(e) => {
+   
+    e.preventDefault();
+ 
+    e.stopPropagation(); 
+
+    saveFavorite(item.id, item.media_type as "movie" | "tv");
+  }}
+  className="absolute top-4 right-1 md:top-1 z-10 hover:scale-150"
+>
+  <MdFavorite
+    className={`${
+      isFavorite(item.id, item.media_type)
+        ? "text-red-700"
+        : "text-white"
+    } hover:scale-150`}
+  />
+</button>
 
                 <Image
                   src={`https://image.tmdb.org/t/p/w500${item.poster_path}`}
@@ -208,6 +215,7 @@ const Search = () => {
                   className="md:w-full md:h-full rounded-lg object-contain"
                 />
                 </motion.div>
+                   </Link>
               </CarouselItem>
             ))}
           </CarouselContent>
