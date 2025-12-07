@@ -9,7 +9,7 @@ export default {
   theme: {
     extend: {
       colors: {
-        bgbutton:"#31373E",
+        bgbutton: "#31373E",
         background: "var(--background)",
         gradientColorStops: {
           'custom-green': '#52B788',
@@ -18,7 +18,5 @@ export default {
       },
     },
   },
-  plugins: [
-      require('tailwind-scrollbar'),
-  ],
+
 } satisfies Config;
