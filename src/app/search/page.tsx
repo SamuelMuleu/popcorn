@@ -32,6 +32,7 @@ interface Results {
   media_type: string;
 }
 
+
 const Search = () => {
   const [query, setQuery] = useState<string>("");
   const [results, setResults] = useState<Results[]>([]);
@@ -61,12 +62,12 @@ const Search = () => {
             },
           }
         );
-        
+
         if (response.data.results) {
-          const filteredResults = response.data.results.filter((item: any) => {
+          const filteredResults = response.data.results.filter((item: Results) => {
             return item.poster_path !== null && item.poster_path !== undefined;
           });
-          
+
           setResults(filteredResults);
         } else {
           setResults([]);
@@ -99,7 +100,7 @@ const Search = () => {
             (favorite: { id: number; type: string }) =>
               favorite.id === id && favorite.type === type
           );
-          
+
           if (isFavorite) {
             await updateDoc(userFavoritesRef, {
               favorites: arrayRemove(newFavorite),
@@ -190,14 +191,14 @@ const Search = () => {
                     transition={{ duration: 0.7 }}
                     className="relative"
                   >
-                    <div  className="absolute top-[-18px] left-[160px]">
+                    <div className="absolute top-[-18px] left-[160px]">
 
-                    <ButtonFavorite
-                      id={item.id}
-                      type={item.media_type as "movie" | "tv"}
-                      onClick={saveFavorite}
-                      isFavorite={isFavorite(item.id, item.media_type)}
-                    />
+                      <ButtonFavorite
+                        id={item.id}
+                        type={item.media_type as "movie" | "tv"}
+                        onClick={saveFavorite}
+                        isFavorite={isFavorite(item.id, item.media_type)}
+                      />
                     </div>
 
                     <Image
