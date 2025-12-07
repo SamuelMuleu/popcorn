@@ -82,7 +82,7 @@ export default function DetailPage() {
               },
             }
           );
-          console.log("Providers:", response.data.results.BR);
+
           setWatchProviders(response.data.results.BR || null);
         } catch (err) {
           console.error("Erro ao carregar providers:", err);
@@ -111,7 +111,6 @@ export default function DetailPage() {
     }
   }, [id, type]);
 
-  // Buscar favoritos (igual ao Search)
   useEffect(() => {
     const fetchFavorites = async () => {
       if (user) {
@@ -133,7 +132,6 @@ export default function DetailPage() {
     fetchFavorites();
   }, [user]);
 
-  // Função para salvar/remover favorito (igual ao Search)
   const saveFavorite = async (itemId: number, itemType: "movie" | "tv") => {
     if (user) {
       const userId = user.uid;
@@ -177,7 +175,6 @@ export default function DetailPage() {
     }
   };
 
-  // Verificar se é favorito (igual ao Search)
   const isFavorite = (itemId: number, itemType: string) => {
     return favorites.some((fav) => fav.id === itemId && fav.type === itemType);
   };
@@ -215,7 +212,7 @@ export default function DetailPage() {
 
         {/* BACKDROP */}
         <div
-          className="relative h-64 sm:h-96 rounded-lg"
+          className="relative h-auto min-h-[400px] sm:h-96 rounded-lg"
           style={{
             backgroundImage: `url(https://image.tmdb.org/t/p/original${detail.backdrop_path})`,
             backgroundSize: "cover",
@@ -244,59 +241,65 @@ export default function DetailPage() {
               </div>
             </div>
 
-            <div className="text-center sm:text-left">
+            <div className="text-center sm:text-left w-full">
               <h1 className="text-2xl sm:text-4xl font-bold">
                 {detail.title || detail.name}
               </h1>
               <p className="mt-1 text-sm sm:text-base">
                 {formatarDataBR(detail.release_date || detail.first_air_date)}
               </p>
-              <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
+              <p className="mt-2 text-sm sm:text-base">
                 {detail.overview}
               </p>
-              <div className="mt-4 flex justify-center">
+              <div className="mt-4 flex justify-center sm:justify-start">
                 <StarRating rating={detail.vote_average} />
               </div>
             </div>
           </div>
         </div>
+
         {/* ONDE ASSISTIR */}
         {watchProviders && (
           <div className="mt-10 mb-10">
-
-
             {/* Streaming (Flatrate) */}
             {watchProviders.flatrate && watchProviders.flatrate.length > 0 && (
               <div className="mb-6 flex flex-col items-center justify-center">
                 <h3 className="text-lg font-semibold mb-3 text-green-400">
                   Disponível para Streaming
                 </h3>
-                <div className="flex flex-wrap gap-4 ">
-                  {watchProviders.flatrate.map((provider) => (
-                    <div
-                      key={provider.provider_id}
-                      className="flex flex-col items-center gap-2 rounded-lg"
-                    >
-                      <div className="w-16 h-16 rounded-lg overflow-hidden p-1">
-                        <Image
-                          src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
-                          alt={provider.provider_name}
-                          width={64}
-                          height={64}
-                          className="w-full h-full object-contain rounded-lg"
-                        />
+                <div className="flex flex-wrap gap-4 justify-center">
+                  {watchProviders.flatrate
+                    .filter((provider) =>
+                      !provider.provider_name.toLowerCase().includes('channel') &&
+                      !provider.provider_name.toLowerCase().includes('standard') &&
+                      !provider.provider_name.toLowerCase().includes('with ads')
+                    )
+                    .map((provider) => (
+                      <div
+                        key={provider.provider_id}
+                        className="flex flex-col items-center gap-2 rounded-lg"
+                      >
+                        <div className="w-16 h-16 rounded-lg overflow-hidden p-1">
+                          <Image
+                            src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                            alt={provider.provider_name}
+                            width={64}
+                            height={64}
+                            className="w-full h-full object-contain rounded-lg"
+                          />
+                        </div>
+                        <span className="text-xs text-center max-w-[64px]">
+                          {provider.provider_name}
+                        </span>
                       </div>
-                      <span className="text-xs text-center max-w-[64px]">
-                        {provider.provider_name}
-                      </span>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </div>
             )}
 
+            {/* TRAILER */}
             {trailer && (
-              <div className="sm:mt-4 mt-64 mb-10">
+              <div className="mt-10 mb-10">
                 <h2 className="text-xl sm:text-2xl font-semibold mb-4">Trailer</h2>
                 <div className="relative w-full pb-[56.25%] h-0">
                   <iframe
@@ -310,14 +313,9 @@ export default function DetailPage() {
                 </div>
               </div>
             )}
-
-
           </div>
-
         )}
       </div>
-
-    </div >
-
+    </div>
   );
 }

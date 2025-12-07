@@ -192,17 +192,17 @@ const MovieCard = () => {
                   className="p-2 flex flex-col items-center justify-center"
                 >
                   <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
-                  
-                  <div className="absolute top-[-18px] right-[140px]">
 
-                    
-                    <ButtonFavorite
-                      id={movie.id}
-                      type="movie"
-                      onClick={saveFavorite}
-                      isFavorite={isFavorite(movie.id, "movie")}
-                    />
-                  </div>
+                    <div className="sm:absolute top-[-18px] right-[140px] lg:absolute md:absolute ">
+
+
+                      <ButtonFavorite
+                        id={movie.id}
+                        type="movie"
+                        onClick={saveFavorite}
+                        isFavorite={isFavorite(movie.id, "movie")}
+                      />
+                    </div>
 
                     <Image
                       src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -251,15 +251,14 @@ const MovieCard = () => {
                     className="p-2 flex flex-col items-center justify-center"
                   >
                     <div className="w-full overflow-hidden rounded-2xl relative mb-10">
-<div className="absolute top-[-18px] right-[140px]" >
-
-                      <ButtonFavorite
-                        id={serie.id}
-                        type="tv"
-                        onClick={saveFavorite}
-                        isFavorite={isFavorite(serie.id, "tv")}
-                      />
-  </div>
+                      <div className="sm:absolute  top-[-18px] right-[140px] lg:absolute md:absolute ">
+                        <ButtonFavorite
+                          id={serie.id}
+                          type="tv"
+                          onClick={saveFavorite}
+                          isFavorite={isFavorite(serie.id, "tv")}
+                        />
+                      </div>
                       <Image
                         src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                         width={200}
