@@ -53,12 +53,14 @@ const AuthState = () => {
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="p-8 max-w-md mx-auto border border-gradientColorStops-custom-green bg-bgbutton rounded-xl shadow-md">
+      <div className="p-8 max-w-md mx-auto border  border-gradientColorStops-custom-green  rounded-xl shadow-md">
         {user ? (
           <div className="text-center">
             <h2 className="text-2xl font-semibold text-white">
+                 
               Bem-vindo, {user.displayName || "Usuário"}
             </h2>
+      
             {user.photoURL ? (
               <motion.div
                 initial={{ opacity: 0 }}
@@ -82,7 +84,7 @@ const AuthState = () => {
             <div className="mt-4">
               <motion.button
                 onClick={handleLogout}
-                className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+                className="w-20rem bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
                 whileHover={{ scale: 1.1 }}
                 transition={{ duration: 0.2 }}
               >

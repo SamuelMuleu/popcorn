@@ -1,33 +1,31 @@
-"use client";
-
 import { MdFavorite } from "react-icons/md";
 
-// Define as propriedades que o componente vai receber
 interface ButtonFavoriteProps {
   id: number;
   type: "movie" | "tv";
   onClick: (id: number, type: "movie" | "tv") => void;
+  isFavorite?: boolean; // Opcional para manter compatibilidade
 }
 
-export default function ButtonFavorite({ id, type, onClick }: ButtonFavoriteProps) {
+export default function ButtonFavorite({ id, type, onClick, isFavorite = true }: ButtonFavoriteProps) {
   
-  // Função para lidar com o clique
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    // Impede que o clique no botão ative o Link que o envolve
     e.preventDefault(); 
     e.stopPropagation();
-
-    // Chama a função que foi passada pelo componente pai
     onClick(id, type);
   };
 
   return (
     <button
       onClick={handleClick}
-      aria-label="Remover dos favoritos"
-      className="absolute top-6 right-5 z-10 p-2 bg-red-700 rounded-full transition-all duration-300 hover:bg-black/60 hover:scale-110"
+      aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
+      className={`absolute top-5 right-4 z-10 p-2 rounded-full transition-all duration-300 hover:scale-110 ${
+        isFavorite 
+          ? "bg-red-700 hover:bg-red-800" 
+          : "bg-green-800 hover:bg-green-900"
+      }`}
     >
-      <MdFavorite className="text-white text-xl " />
+      <MdFavorite className="text-white text-xl" />
     </button>
   );
 }

@@ -8,7 +8,7 @@ import { IoIosReturnLeft } from "react-icons/io";
 import StarRating from "@/components/StarRating";
 import ButtonFavorite from "@/components/ButtonFavorite";
 import { useAuth } from "@/app/context/AuthContext";
-import { arrayRemove, doc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface Detail {
@@ -24,9 +24,15 @@ interface Detail {
 }
 
 interface Provider {
-logo_path: string;
-provider_id: number;
-provider_name: string;
+  logo_path: string;
+  provider_id: number;
+  provider_name: string;
+}
+
+interface WatchProviders {
+  flatrate?: Provider[];
+  rent?: Provider[];
+  buy?: Provider[];
 }
 
 interface Video {
@@ -41,9 +47,10 @@ export default function DetailPage() {
   const { type, id } = useParams();
   const router = useRouter();
   const [detail, setDetail] = useState<Detail | null>(null);
-  const [provider, setProvider] = useState<Provider | null>(null);
+  const [watchProviders, setWatchProviders] = useState<WatchProviders | null>(null);
   const [videos, setVideos] = useState<Video[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [favorites, setFavorites] = useState<{ id: number; type: string }[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -64,27 +71,24 @@ export default function DetailPage() {
           console.error(err);
         }
       };
-const fetchProviders = async () => {
+
+      const fetchProviders = async () => {
         try {
           const response = await axios.get(
-              `https://api.themoviedb.org/3/${type}/${id}/watch/providers`,
+            `https://api.themoviedb.org/3/${type}/${id}/watch/providers`,
             {
               params: {
                 api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
-                      language: "pt-BR",
-
               },
             }
           );
-          setProvider(response.data.results.BR);
+          console.log("Providers:", response.data.results.BR);
+          setWatchProviders(response.data.results.BR || null);
         } catch (err) {
-          setError("Erro ao carregar detalhes.");
-          console.error(err);
+          console.error("Erro ao carregar providers:", err);
         }
       };
 
-      
-      
       const fetchVideos = async () => {
         try {
           const response = await axios.get(
@@ -103,19 +107,85 @@ const fetchProviders = async () => {
 
       fetchDetails();
       fetchVideos();
-     fetchProviders();
-    console.log(provider)
-    
+      fetchProviders();
     }
-
   }, [id, type]);
+
+  // Buscar favoritos (igual ao Search)
+  useEffect(() => {
+    const fetchFavorites = async () => {
+      if (user) {
+        const userFavoritesRef = doc(db, "favorites", user.uid);
+
+        try {
+          const docSnap = await getDoc(userFavoritesRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setFavorites(data.favorites || []);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar favoritos: ", err);
+        }
+      }
+    };
+
+    fetchFavorites();
+  }, [user]);
+
+  // Função para salvar/remover favorito (igual ao Search)
+  const saveFavorite = async (itemId: number, itemType: "movie" | "tv") => {
+    if (user) {
+      const userId = user.uid;
+      const userFavoritesRef = doc(db, "favorites", userId);
+
+      try {
+        const docSnap = await getDoc(userFavoritesRef);
+        const newFavorite = { id: itemId, type: itemType };
+
+        if (docSnap.exists()) {
+          const currentFavorites = docSnap.data()?.favorites || [];
+          const isFavorite = currentFavorites.some(
+            (favorite: { id: number; type: string }) =>
+              favorite.id === itemId && favorite.type === itemType
+          );
+
+          if (isFavorite) {
+            await updateDoc(userFavoritesRef, {
+              favorites: arrayRemove(newFavorite),
+            });
+            setFavorites((prev) =>
+              prev.filter(
+                (favorite) => favorite.id !== itemId || favorite.type !== itemType
+              )
+            );
+          } else {
+            await updateDoc(userFavoritesRef, {
+              favorites: arrayUnion(newFavorite),
+            });
+            setFavorites((prev) => [...prev, newFavorite]);
+          }
+        } else {
+          await setDoc(userFavoritesRef, {
+            favorites: [newFavorite],
+          });
+          setFavorites([newFavorite]);
+        }
+      } catch (err) {
+        console.error("Erro ao salvar favorito: ", err);
+      }
+    }
+  };
+
+  // Verificar se é favorito (igual ao Search)
+  const isFavorite = (itemId: number, itemType: string) => {
+    return favorites.some((fav) => fav.id === itemId && fav.type === itemType);
+  };
 
   if (error)
     return <div className="text-red-500 text-center mt-10">{error}</div>;
   if (!detail) return <div className="text-center mt-10">Carregando...</div>;
-   
 
-console.log(videos)
   const trailer = videos.find(
     (video) =>
       video.site === "YouTube" &&
@@ -128,19 +198,6 @@ console.log(videos)
     }
     const dateObj = new Date(data + "T00:00:00");
     return new Intl.DateTimeFormat("pt-BR").format(dateObj);
-  };
-
-  const removeFavorite = async (id: number, type: "movie" | "tv") => {
-    if (!user) return;
-
-    try {
-      const docRef = doc(db, "favorites", user.uid);
-      await updateDoc(docRef, {
-        favorites: arrayRemove({ id, type }),
-      });
-    } catch (error) {
-      console.error("Erro ao remover o favorito:", error);
-    }
   };
 
   return (
@@ -180,8 +237,9 @@ console.log(videos)
               <div className="mt-3">
                 <ButtonFavorite
                   id={detail.id}
-                  type="movie"
-                  onClick={removeFavorite}
+                  type={type as "movie" | "tv"}
+                  onClick={saveFavorite}
+                  isFavorite={isFavorite(detail.id, type as string)}
                 />
               </div>
             </div>
@@ -193,32 +251,73 @@ console.log(videos)
               <p className="mt-1 text-sm sm:text-base">
                 {formatarDataBR(detail.release_date || detail.first_air_date)}
               </p>
-              <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">{detail.overview}</p>
+              <p className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-transparent">
+                {detail.overview}
+              </p>
               <div className="mt-4 flex justify-center">
                 <StarRating rating={detail.vote_average} />
               </div>
-              
             </div>
           </div>
         </div>
+        {/* ONDE ASSISTIR */}
+        {watchProviders && (
+          <div className="mt-10 mb-10">
 
 
-        {trailer && (
-          <div className=" sm:mt-4 mt-64 mb-10">
-            <h2 className="text-xl sm:text-2xl font-semibold mb-4">Trailer</h2>
-            <div className="relative w-full pb-[56.25%] h-0">
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                src={`https://www.youtube.com/embed/${trailer.key}`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
+            {/* Streaming (Flatrate) */}
+            {watchProviders.flatrate && watchProviders.flatrate.length > 0 && (
+              <div className="mb-6 flex flex-col items-center justify-center">
+                <h3 className="text-lg font-semibold mb-3 text-green-400">
+                  Disponível para Streaming
+                </h3>
+                <div className="flex flex-wrap gap-4 ">
+                  {watchProviders.flatrate.map((provider) => (
+                    <div
+                      key={provider.provider_id}
+                      className="flex flex-col items-center gap-2 rounded-lg"
+                    >
+                      <div className="w-16 h-16 rounded-lg overflow-hidden p-1">
+                        <Image
+                          src={`https://image.tmdb.org/t/p/original${provider.logo_path}`}
+                          alt={provider.provider_name}
+                          width={64}
+                          height={64}
+                          className="w-full h-full object-contain rounded-lg"
+                        />
+                      </div>
+                      <span className="text-xs text-center max-w-[64px]">
+                        {provider.provider_name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {trailer && (
+              <div className="sm:mt-4 mt-64 mb-10">
+                <h2 className="text-xl sm:text-2xl font-semibold mb-4">Trailer</h2>
+                <div className="relative w-full pb-[56.25%] h-0">
+                  <iframe
+                    className="absolute top-0 left-0 w-full h-full rounded-lg"
+                    src={`https://www.youtube.com/embed/${trailer.key}`}
+                    title="YouTube video player"
+                    frameBorder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                </div>
+              </div>
+            )}
+
+
           </div>
+
         )}
       </div>
-    </div>
+
+    </div >
+
   );
 }

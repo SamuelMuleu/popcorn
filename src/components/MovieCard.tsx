@@ -4,6 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
+import ButtonFavorite from "@/components/ButtonFavorite";
 
 import {
   Carousel,
@@ -21,9 +22,7 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-import { MdFavorite } from "react-icons/md";
 import { motion } from "motion/react";
-
 
 interface Movie {
   id: number;
@@ -45,7 +44,6 @@ const MovieCard = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [series, setSeries] = useState<Serie[]>([]);
   const [error, setError] = useState<string | null>(null);
-
   const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
     []
   );
@@ -86,6 +84,7 @@ const MovieCard = () => {
           await setDoc(userFavoritesRef, {
             favorites: [newFavorite],
           });
+          setFavorites([newFavorite]);
         }
       } catch (err) {
         if (err instanceof Error) {
@@ -95,7 +94,6 @@ const MovieCard = () => {
       }
     }
   };
-
 
   useEffect(() => {
     const fetchFavorites = async () => {
@@ -134,7 +132,6 @@ const MovieCard = () => {
         );
 
         setMovies(response.data.results);
-        console.log(response.data.results);
       } catch (err) {
         setError("Erro ao carregar filmes. Tente novamente mais tarde.");
         console.error(err);
@@ -168,8 +165,6 @@ const MovieCard = () => {
 
   if (error) return <div className="text-red-500">{error}</div>;
 
-
-
   return (
     <div className="min-h-screen text-white p-7">
       <h1 className="text-2xl font-semibold mb-6 text-start opacity-25">
@@ -197,25 +192,17 @@ const MovieCard = () => {
                   className="p-2 flex flex-col items-center justify-center"
                 >
                   <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
-                <button
-                        className="absolute top-2 md:left-48 left-24 md:top-1 z-10 hover:scale-150"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const type = movie.media_type
-                            ? movie.media_type
-                            : "tv";
-                          saveFavorite(movie.id, type as "movie" | "tv");
-                        }}
-                      >
-                        {" "}
-                        <MdFavorite
-                          className={`${isFavorite(movie.id, movie.media_type || "tv")
-                              ? "text-red-700"
-                              : "text-white"
-                            } hover:scale-150`}
-                        />
-                      </button>
+                  
+                  <div className="absolute top-[-18px] right-[140px]">
 
+                    
+                    <ButtonFavorite
+                      id={movie.id}
+                      type="movie"
+                      onClick={saveFavorite}
+                      isFavorite={isFavorite(movie.id, "movie")}
+                    />
+                  </div>
 
                     <Image
                       src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
@@ -264,25 +251,15 @@ const MovieCard = () => {
                     className="p-2 flex flex-col items-center justify-center"
                   >
                     <div className="w-full overflow-hidden rounded-2xl relative mb-10">
-                      <button
-                        className="absolute top-2 md:left-48 left-24 md:top-1 z-10 hover:scale-150"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          const type = serie.media_type
-                            ? serie.media_type
-                            : "tv";
-                          saveFavorite(serie.id, type as "movie" | "tv");
-                        }}
-                      >
-                        {" "}
-                        <MdFavorite
-                          className={`${isFavorite(serie.id, serie.media_type || "tv")
-                              ? "text-red-700"
-                              : "text-white"
-                            } hover:scale-150`}
-                        />
-                      </button>
+<div className="absolute top-[-18px] right-[140px]" >
 
+                      <ButtonFavorite
+                        id={serie.id}
+                        type="tv"
+                        onClick={saveFavorite}
+                        isFavorite={isFavorite(serie.id, "tv")}
+                      />
+  </div>
                       <Image
                         src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                         width={200}
