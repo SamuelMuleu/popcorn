@@ -5,6 +5,7 @@ import Image from "next/image";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import ButtonFavorite from "@/components/ButtonFavorite";
+import ButtonWatched from "@/components/ButtonWatched";
 
 import {
   Carousel,
@@ -47,6 +48,7 @@ const MovieCard = () => {
   const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
     []
   );
+  const [watched, setWatched] = useState<{ id: number; type: string }[]>([]);
 
   const saveFavorite = async (id: number, type: "movie" | "tv") => {
     if (auth.currentUser) {
@@ -95,6 +97,53 @@ const MovieCard = () => {
     }
   };
 
+  const saveWatched = async (id: number, type: "movie" | "tv") => {
+    if (auth.currentUser) {
+      const userId = auth.currentUser.uid;
+      const userWatchedRef = doc(db, "watched", userId);
+
+      try {
+        const docSnap = await getDoc(userWatchedRef);
+        const newWatched = { id, type };
+
+        if (docSnap.exists()) {
+          const currentWatched = docSnap.data()?.watched || [];
+
+          const isWatched = currentWatched.some(
+            (item: { id: number; type: string }) =>
+              item.id === id && item.type === type
+          );
+
+          if (isWatched) {
+            await updateDoc(userWatchedRef, {
+              watched: arrayRemove(newWatched),
+            });
+            setWatched((prev) =>
+              prev.filter(
+                (item) => item.id !== id || item.type !== type
+              )
+            );
+          } else {
+            await updateDoc(userWatchedRef, {
+              watched: arrayUnion(newWatched),
+            });
+            setWatched((prev) => [...prev, newWatched]);
+          }
+        } else {
+          await setDoc(userWatchedRef, {
+            watched: [newWatched],
+          });
+          setWatched([newWatched]);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError("Erro ao salvar assistido: " + err.message);
+        }
+        console.error("Erro ao salvar assistido: ", err);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchFavorites = async () => {
       if (auth.currentUser) {
@@ -113,10 +162,32 @@ const MovieCard = () => {
       }
     };
     fetchFavorites();
+
+    const fetchWatched = async () => {
+      if (auth.currentUser) {
+        const userId = auth.currentUser.uid;
+        const userWatchedRef = doc(db, "watched", userId);
+        try {
+          const docSnap = await getDoc(userWatchedRef);
+
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setWatched(data.watched || []);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar assistidos: ", err);
+        }
+      }
+    };
+    fetchWatched();
   }, []);
 
   const isFavorite = (id: number, type: string) => {
     return favorites.some((fav) => fav.id === id && fav.type === type);
+  };
+
+  const isWatched = (id: number, type: string) => {
+    return watched.some((item) => item.id === id && item.type === type);
   };
 
   useEffect(() => {
@@ -194,13 +265,20 @@ const MovieCard = () => {
                   <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
 
                     <div className="sm:absolute top-[-18px] right-[140px] lg:absolute md:absolute ">
-
-
                       <ButtonFavorite
                         id={movie.id}
                         type="movie"
                         onClick={saveFavorite}
                         isFavorite={isFavorite(movie.id, "movie")}
+                      />
+                    </div>
+
+                    <div className="sm:absolute top-[-17px] left-[20px] lg:absolute md:absolute ">
+                      <ButtonWatched
+                        id={movie.id}
+                        type="movie"
+                        onClick={saveWatched}
+                        isWatched={isWatched(movie.id, "movie")}
                       />
                     </div>
 

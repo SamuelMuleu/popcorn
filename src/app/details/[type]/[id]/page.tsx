@@ -7,6 +7,8 @@ import Image from "next/image";
 import { IoIosReturnLeft } from "react-icons/io";
 import StarRating from "@/components/StarRating";
 import ButtonFavorite from "@/components/ButtonFavorite";
+import SeasonEpisodes from "@/components/SeasonEpisodes";
+import CommentsSection from "@/components/CommentsSection";
 import { useAuth } from "@/app/context/AuthContext";
 import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -43,6 +45,25 @@ interface Video {
   name?: string;
 }
 
+interface Episode {
+  id: number;
+  episode_number: number;
+  name: string;
+  overview: string;
+  still_path: string;
+  air_date: string;
+}
+
+interface Season {
+  id: number;
+  season_number: number;
+  name: string;
+  episode_count: number;
+  overview: string;
+  poster_path: string;
+  episodes?: Episode[];
+}
+
 export default function DetailPage() {
   const { type, id } = useParams();
   const router = useRouter();
@@ -51,6 +72,9 @@ export default function DetailPage() {
   const [videos, setVideos] = useState<Video[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ id: number; type: string }[]>([]);
+  const [seasons, setSeasons] = useState<Season[]>([]);
+  const [selectedSeason, setSelectedSeason] = useState<number>(1);
+  const [watchedEpisodes, setWatchedEpisodes] = useState<{ seriesId: number; season: number; episode: number }[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -105,9 +129,28 @@ export default function DetailPage() {
         }
       };
 
+      const fetchSeasons = async () => {
+        if (type === "tv") {
+          try {
+            const response = await axios.get(
+              `https://api.themoviedb.org/3/tv/${id}?language=pt-BR`,
+              {
+                params: {
+                  api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
+                },
+              }
+            );
+            setSeasons(response.data.seasons || []);
+          } catch (err) {
+            console.error("Erro ao carregar temporadas:", err);
+          }
+        }
+      };
+
       fetchDetails();
       fetchVideos();
       fetchProviders();
+      fetchSeasons();
     }
   }, [id, type]);
 
@@ -130,6 +173,23 @@ export default function DetailPage() {
     };
 
     fetchFavorites();
+
+    const fetchWatchedEpisodes = async () => {
+      if (user) {
+        const userWatchedRef = doc(db, "watchedEpisodes", user.uid);
+        try {
+          const docSnap = await getDoc(userWatchedRef);
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            setWatchedEpisodes(data.episodes || []);
+          }
+        } catch (err) {
+          console.error("Erro ao buscar episódios :", err);
+        }
+      }
+    };
+
+    fetchWatchedEpisodes();
   }, [user]);
 
   const saveFavorite = async (itemId: number, itemType: "movie" | "tv") => {
@@ -177,6 +237,49 @@ export default function DetailPage() {
 
   const isFavorite = (itemId: number, itemType: string) => {
     return favorites.some((fav) => fav.id === itemId && fav.type === itemType);
+  };
+
+  const toggleWatchedEpisode = async (seriesId: number, season: number, episode: number) => {
+    if (!user) return;
+
+    const userWatchedRef = doc(db, "watchedEpisodes", user.uid);
+    const episodeData = { seriesId, season, episode };
+
+    try {
+      const docSnap = await getDoc(userWatchedRef);
+      const isWatched = watchedEpisodes.some(
+        (ep) => ep.seriesId === seriesId && ep.season === season && ep.episode === episode
+      );
+
+      if (docSnap.exists()) {
+        if (isWatched) {
+          await updateDoc(userWatchedRef, {
+            episodes: arrayRemove(episodeData),
+          });
+          setWatchedEpisodes((prev) =>
+            prev.filter((ep) => !(ep.seriesId === seriesId && ep.season === season && ep.episode === episode))
+          );
+        } else {
+          await updateDoc(userWatchedRef, {
+            episodes: arrayUnion(episodeData),
+          });
+          setWatchedEpisodes((prev) => [...prev, episodeData]);
+        }
+      } else {
+        await setDoc(userWatchedRef, {
+          episodes: [episodeData],
+        });
+        setWatchedEpisodes([episodeData]);
+      }
+    } catch (err) {
+      console.error("Erro ao marcar episódio:", err);
+    }
+  };
+
+  const isEpisodeWatched = (seriesId: number, season: number, episode: number) => {
+    return watchedEpisodes.some(
+      (ep) => ep.seriesId === seriesId && ep.season === season && ep.episode === episode
+    );
   };
 
   if (error)
@@ -315,6 +418,54 @@ export default function DetailPage() {
             )}
           </div>
         )}
+
+        {/* TEMPORADAS E EPISÓDIOS (só para séries) */}
+        {type === "tv" && seasons.length > 0 && (
+          <div className="mt-10">
+            <h2 className="text-2xl font-semibold mb-4">Temporadas e Episódios</h2>
+
+
+            {/* Seletor de Temporadas */}
+            <div className="flex gap-3 overflow-x-auto pb-4 mb-6 scrollbar-custom">
+              {seasons
+                .filter((season) => season.season_number > 0) // Filtrar temporadas especiais
+                .map((season) => (
+                  <button
+                    key={season.id}
+                    onClick={() => setSelectedSeason(season.season_number)}
+                    className={`px-6 py-3 rounded-lg whitespace-nowrap transition-all duration-300 ${selectedSeason === season.season_number
+                      ? "bg-gradient-to-r from-green-500 to-green-600 text-black font-bold shadow-lg shadow-green-500/50 scale-105"
+                      : "bg-gray-800/80 backdrop-blur-sm hover:bg-gray-700 hover:shadow-md border border-gray-700/50"
+                      }`}
+                  >
+                    Temporada {season.season_number}
+                  </button>
+                ))}
+            </div>
+
+            {/* Lista de Episódios */}
+            {user ? (
+              <SeasonEpisodes
+                seriesId={Number(id)}
+                seasonNumber={selectedSeason}
+                onToggleWatched={toggleWatchedEpisode}
+                isEpisodeWatched={isEpisodeWatched}
+              />
+            ) : (
+              <div className="text-center py-8 bg-gray-800/50 rounded-lg">
+                <p className="text-gray-300">Faça login para marcar episódios como assistidos</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* COMENTÁRIOS */}
+        <div className="mt-10">
+          <CommentsSection
+            contentId={Number(id)}
+            contentType={type as "movie" | "episode"}
+          />
+        </div>
       </div>
     </div>
   );
