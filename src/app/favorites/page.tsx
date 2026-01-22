@@ -182,15 +182,10 @@ const Library = () => {
             const watchedMoviesList = watched.filter(
               (item: Favorite) => item.type === "movie"
             );
-            const watchedTvShowsList = watched.filter(
-              (item: Favorite) => item.type === "tv"
-            );
 
             setWatchedMovies(watchedMoviesList);
-            setWatchedTvShows(watchedTvShowsList);
 
             const movieIds = watchedMoviesList.map((movie: Favorite) => movie.id);
-            const tvShowIds = watchedTvShowsList.map((tv: Favorite) => tv.id);
 
             const moviePromises = movieIds.map((id: number) =>
               axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
@@ -200,19 +195,9 @@ const Library = () => {
               })
             );
 
-            const tvShowPromises = tvShowIds.map((id: number) =>
-              axios.get(`https://api.themoviedb.org/3/tv/${id}`, {
-                params: {
-                  api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
-                },
-              })
-            );
-
             const movieResponses = await Promise.all(moviePromises);
-            const tvShowResponses = await Promise.all(tvShowPromises);
 
             setWatchedMovieDetails(movieResponses.map((res) => res.data));
-            setWatchedTvShowDetails(tvShowResponses.map((res) => res.data));
           }
         } catch (error: unknown) {
           if (error instanceof Error) {
@@ -360,11 +345,8 @@ const Library = () => {
         watched: arrayRemove({ id, type }),
       });
       if (type === "movie") {
-        setWatchedMovies((prev) => prev.filter((item) => item.id !== id));
-        setWatchedMovieDetails((prev) => prev.filter((movie) => movie.id !== id));
-      } else if (type === "tv") {
-        setWatchedTvShows((prev) => prev.filter((item) => item.id !== id));
-        setWatchedTvShowDetails((prev) => prev.filter((tv) => tv.id !== id));
+        setWatchedMovies((prev: Movie[]) => prev.filter((item) => item.id !== id));
+        setWatchedMovieDetails((prev: Movie[]) => prev.filter((movie) => movie.id !== id));
       }
     } catch (error) {
       console.error("Erro ao remover de assistidos:", error);
@@ -646,7 +628,7 @@ const Library = () => {
                     {watchingSeries.length === 0 ? (
                       <div className="pl-4">Você não começou a assistir nenhuma série ainda.</div>
                     ) : (
-                      watchingSeriesDetails.map((series: Serie, index) => {
+                      watchingSeriesDetails.map((series: Serie) => {
                         const watchingInfo = watchingSeries.find(
                           (ws) => ws.seriesId === series.id
                         );
