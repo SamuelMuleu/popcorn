@@ -45,13 +45,11 @@ const Library = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [tvShows, setTvShows] = useState<Favorite[]>([]);
   const [watchedMovies, setWatchedMovies] = useState<Movie[]>([]);
-  const [watchedTvShows, setWatchedTvShows] = useState<Favorite[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [movieDetails, setMovieDetails] = useState<Movie[]>([]);
   const [tvShowDetails, setTvShowDetails] = useState<Serie[]>([]);
   const [watchedMovieDetails, setWatchedMovieDetails] = useState<Movie[]>([]);
-  const [watchedTvShowDetails, setWatchedTvShowDetails] = useState<Serie[]>([]);
   const { user } = useAuth();
   const [watched, setWatched] = useState<{ id: number; type: string }[]>([]);
   const [watchingSeries, setWatchingSeries] = useState<{ seriesId: number; episodesWatched: number }[]>([]);
