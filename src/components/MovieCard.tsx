@@ -264,7 +264,7 @@ const MovieCard = () => {
                 >
                   <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
 
-                    <div className="sm:absolute top-[-18px] right-[140px] lg:absolute md:absolute ">
+                    <div className="sm:absolute top-[2px] right-[155px] lg:absolute md:absolute ">
                       <ButtonFavorite
                         id={movie.id}
                         type="movie"
@@ -329,7 +329,7 @@ const MovieCard = () => {
                     className="p-2 flex flex-col items-center justify-center"
                   >
                     <div className="w-full overflow-hidden rounded-2xl relative mb-10">
-                      <div className="sm:absolute  top-[-18px] right-[140px] lg:absolute md:absolute ">
+                      <div className="sm:absolute top-[2px] right-[155px] lg:absolute md:absolute ">
                         <ButtonFavorite
                           id={serie.id}
                           type="tv"

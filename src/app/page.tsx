@@ -37,17 +37,7 @@ export default function Home() {
         <span className="flex items-center justify-center">e Series</span>
       </motion.h1>
 
-      <motion.p
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut", delay: 0.2 }}
-        className="font-bold text-gradientColorStops-custom-green p-3"
-      >
-        Favorite Filmes e Series na sua lista para{" "}
-        <span className="flex items-center justify-center">
-          Assistir Depois!
-        </span>
-      </motion.p>
+
 
       {!user ? (
         <motion.div

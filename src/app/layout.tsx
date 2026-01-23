@@ -3,6 +3,7 @@ import "./globals.css";
 import AuthProvider from "@/app/context/AuthContext";
 import VideoBackground from "@/components/VideoBackground";
 import BottomNav from "@/components/BottomNav";
+import Footer from "@/components/Footer";
 
 interface LayoutProps {
   children: ReactNode;
@@ -14,7 +15,26 @@ const Layout = ({ children }: LayoutProps) => {
       <head>
         <meta charSet="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Popcorn</title>
+
+        {/* SEO Meta Tags */}
+        <title>Popcorn - Descubra e Organize Filmes e Séries</title>
+        <meta name="description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries. Crie listas de favoritos, acompanhe seu progresso em séries e compartilhe opiniões com a comunidade." />
+        <meta name="keywords" content="filmes, séries, streaming, TMDB, avaliações, recomendações, favoritos, assistir, cinema, tv shows" />
+        <meta name="author" content="Popcorn" />
+        <meta name="robots" content="index, follow" />
+
+        {/* Open Graph / Facebook */}
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="Popcorn - Descubra e Organize Filmes e Séries" />
+        <meta property="og:description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries." />
+        <meta property="og:site_name" content="Popcorn" />
+
+        {/* Twitter */}
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Popcorn - Descubra e Organize Filmes e Séries" />
+        <meta name="twitter:description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries." />
+
+        {/* Favicon */}
         <link rel="icon" href="/assets/popcorn.svg" />
       </head>
 
@@ -26,6 +46,9 @@ const Layout = ({ children }: LayoutProps) => {
           <main className="flex-1 p-4 z-0 mb-24">
             {children}
           </main>
+
+          {/* Footer */}
+          <Footer />
 
           {/* Navegação inferior */}
           <BottomNav />

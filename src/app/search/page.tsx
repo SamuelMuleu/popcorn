@@ -261,7 +261,7 @@ const Search = () => {
                     transition={{ duration: 0.7 }}
                     className="relative"
                   >
-                    <div className="absolute top-[-18px] left-[160px]">
+                    <div className="absolute top-[3px] left-[100px]">
 
                       <ButtonFavorite
                         id={item.id}
@@ -273,7 +273,7 @@ const Search = () => {
 
                     {/* Botão Watched apenas para filmes */}
                     {item.media_type === "movie" && (
-                      <div className="absolute top-[-18px] left-[10px]">
+                      <div className="absolute top-[-18px] left-[-4px]">
                         <ButtonWatched
                           id={item.id}
                           type="movie"
