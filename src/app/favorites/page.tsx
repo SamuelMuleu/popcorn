@@ -456,14 +456,12 @@ const Library = () => {
                               type="movie"
                               onClick={removeFavorite}
                             />
-                            <div className="sm:absolute top-[.5rem] left-[10px] lg:absolute md:absolute ">
-                              <ButtonWatched
-                                id={movie.id}
-                                type="movie"
-                                onClick={saveWatched}
-                                isWatched={isWatched(movie.id, "movie")}
-                              />
-                            </div>
+                            <ButtonWatched
+                              id={movie.id}
+                              type="movie"
+                              onClick={saveWatched}
+                              isWatched={isWatched(movie.id, "movie")}
+                            />
                             <motion.div className="overflow-hidden rounded-lg">
                               <Image
                                 src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}

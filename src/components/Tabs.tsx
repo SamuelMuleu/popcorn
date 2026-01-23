@@ -18,14 +18,14 @@ export default function Tabs({ defaultTab, tabs }: TabsProps) {
     return (
         <div className="w-full">
             {/* Tab Headers */}
-            <div className="flex gap-4 border-b border-white/10 mb-6">
+            <div className="flex gap-2 md:gap-4 border-b border-white/10 mb-6 overflow-x-auto scrollbar-custom">
                 {tabs.map((tab) => (
                     <button
                         key={tab.id}
                         onClick={() => setActiveTab(tab.id)}
-                        className={`pb-3 px-4 font-semibold text-lg transition-all duration-300 relative ${activeTab === tab.id
-                                ? "text-gradientColorStops-custom-green"
-                                : "text-white/50 hover:text-white/80"
+                        className={`pb-3 px-2 md:px-4 font-semibold text-sm md:text-lg whitespace-nowrap transition-all duration-300 relative ${activeTab === tab.id
+                            ? "text-gradientColorStops-custom-green"
+                            : "text-white/50 hover:text-white/80"
                             }`}
                     >
                         {tab.label}
