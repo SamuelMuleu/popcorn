@@ -41,7 +41,7 @@ export default function Tabs({ defaultTab, tabs }: TabsProps) {
                 ))}
             </div>
 
-            {/* Tab Content */}
+            {/* Tab  */}
             <div className="w-full">
                 {tabs.map((tab) => (
                     <div key={tab.id} className={activeTab === tab.id ? "block" : "hidden"}>
