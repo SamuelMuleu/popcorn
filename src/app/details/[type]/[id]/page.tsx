@@ -7,10 +7,11 @@ import Image from "next/image";
 import { IoIosReturnLeft } from "react-icons/io";
 import StarRating from "@/components/StarRating";
 import ButtonFavorite from "@/components/ButtonFavorite";
+import ButtonWatched from "@/components/ButtonWatched";
 import SeasonEpisodes from "@/components/SeasonEpisodes";
 import CommentsSection from "@/components/CommentsSection";
 import { useAuth } from "@/app/context/AuthContext";
-import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
+import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc, onSnapshot } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface Detail {
@@ -75,6 +76,7 @@ export default function DetailPage() {
   const [seasons, setSeasons] = useState<Season[]>([]);
   const [selectedSeason, setSelectedSeason] = useState<number>(1);
   const [watchedEpisodes, setWatchedEpisodes] = useState<{ seriesId: number; season: number; episode: number }[]>([]);
+  const [watched, setWatched] = useState<{ id: number; type: string }[]>([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -190,6 +192,25 @@ export default function DetailPage() {
     };
 
     fetchWatchedEpisodes();
+
+    const fetchWatched = () => {
+      if (user) {
+        const userWatchedRef = doc(db, "watched", user.uid);
+        return onSnapshot(userWatchedRef, (docSnap) => {
+          if (docSnap.exists()) {
+            setWatched(docSnap.data().watched || []);
+          } else {
+            setWatched([]);
+          }
+        });
+      }
+    };
+
+    const unsubscribeWatched = fetchWatched();
+
+    return () => {
+      if (unsubscribeWatched) unsubscribeWatched();
+    };
   }, [user]);
 
   const saveFavorite = async (itemId: number, itemType: "movie" | "tv") => {
@@ -237,6 +258,44 @@ export default function DetailPage() {
 
   const isFavorite = (itemId: number, itemType: string) => {
     return favorites.some((fav) => fav.id === itemId && fav.type === itemType);
+  };
+
+  const saveWatched = async (itemId: number, itemType: "movie" | "tv") => {
+    if (user) {
+      const userWatchedRef = doc(db, "watched", user.uid);
+
+      try {
+        const docSnap = await getDoc(userWatchedRef);
+        const itemData = { id: itemId, type: itemType };
+
+        if (docSnap.exists()) {
+          const currentWatched = docSnap.data().watched || [];
+          const alreadyWatched = currentWatched.some(
+            (item: { id: number; type: string }) => item.id === itemId && item.type === itemType
+          );
+
+          if (alreadyWatched) {
+            await updateDoc(userWatchedRef, {
+              watched: arrayRemove(itemData),
+            });
+          } else {
+            await updateDoc(userWatchedRef, {
+              watched: arrayUnion(itemData),
+            });
+          }
+        } else {
+          await setDoc(userWatchedRef, {
+            watched: [itemData],
+          });
+        }
+      } catch (err) {
+        console.error("Erro ao salvar assistido: ", err);
+      }
+    }
+  };
+
+  const isWatched = (itemId: number, itemType: string) => {
+    return watched.some((item) => item.id === itemId && item.type === itemType);
   };
 
   const toggleWatchedEpisode = async (seriesId: number, season: number, episode: number) => {
@@ -334,12 +393,18 @@ export default function DetailPage() {
                 alt={detail.title || detail.name || "Poster"}
                 className="rounded-lg w-40 sm:w-52 h-auto"
               />
-              <div className="mt-3">
+              <div className="mt-3 relative">
                 <ButtonFavorite
                   id={detail.id}
                   type={type as "movie" | "tv"}
                   onClick={saveFavorite}
                   isFavorite={isFavorite(detail.id, type as string)}
+                />
+                <ButtonWatched
+                  id={detail.id}
+                  type={type as "movie" | "tv"}
+                  onClick={saveWatched}
+                  isWatched={isWatched(detail.id, type as string)}
                 />
               </div>
             </div>

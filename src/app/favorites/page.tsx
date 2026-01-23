@@ -426,8 +426,8 @@ const Library = () => {
     );
 
   return (
-    <div className="min-h-screen text-white p-7">
-      <h1 className="text-3xl font-bold mb-6">Minha Biblioteca</h1>
+    <div className="min-h-screen text-white p-4 md:p-7 overflow-x-hidden w-full">
+      <h1 className="text-2xl md:text-3xl font-bold mb-6">Minha Biblioteca</h1>
 
       <Tabs
         defaultTab="favorites"
