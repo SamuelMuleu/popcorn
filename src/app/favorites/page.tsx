@@ -448,39 +448,53 @@ const Library = () => {
                       movieDetails.map((movie: Movie) => (
                         <CarouselItem
                           key={movie.id}
-                          className="md:w-[200px] w-48 basis-1/2 md:basis-1/4 lg:basis-1/5 relative p-4"
+                          className="basis-1/2 sm:basis-1/3 md:basis-1/4 lg:basis-1/5 p-2"
                         >
                           <Link href={`/details/movie/${movie.id}`}>
-                            <ButtonFavorite
-                              id={movie.id}
-                              type="movie"
-                              onClick={removeFavorite}
-                            />
-                            <ButtonWatched
-                              id={movie.id}
-                              type="movie"
-                              onClick={saveWatched}
-                              isWatched={isWatched(movie.id, "movie")}
-                            />
-                            <motion.div className="overflow-hidden rounded-lg">
-                              <Image
-                                src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
-                                alt={`Imagem de filme`}
-                                width={200}
-                                height={300}
-                                className="w-full h-auto object-cover"
-                              />
+                            <motion.div
+                              initial={{ opacity: 0, scale: 0.5, y: 20 }}
+                              whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                              viewport={{ once: true }}
+                              transition={{ duration: 0.7 }}
+                              className="relative"
+                            >
+                              <div className="absolute top-2 right-2 z-10">
+                                <ButtonFavorite
+                                  id={movie.id}
+                                  type="movie"
+                                  onClick={removeFavorite}
+                                />
+                              </div>
+
+                              <div className="absolute bottom-[20.5rem] left-2 z-10">
+                                <ButtonWatched
+                                  id={movie.id}
+                                  type="movie"
+                                  onClick={saveWatched}
+                                  isWatched={isWatched(movie.id, "movie")}
+                                />
+                              </div>
+
+                              <div className="overflow-hidden rounded-lg">
+                                <Image
+                                  src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}
+                                  alt={`Imagem de filme`}
+                                  width={200}
+                                  height={300}
+                                  className="w-full h-auto object-cover"
+                                />
+                              </div>
+                              <div className="mt-2 text-center">
+                                <p className="font-semibold text-sm">{movie.title}</p>
+                              </div>
                             </motion.div>
-                            <div className="mt-2 text-center">
-                              <p className="font-semibold">{movie.title}</p>
-                            </div>
                           </Link>
                         </CarouselItem>
                       ))
                     )}
                   </CarouselContent>
-                  <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
-                  <CarouselNext className="md:mr-56 mr-5 -mt-10" />
+                  <CarouselPrevious className="ml-5 md:-ml-16 -mt-10" />
+                  <CarouselNext className="mr-5 md:-mr-16 -mt-10" />
                 </Carousel>
 
                 <h2 className="text-2xl font-semibold mt-10 text-start opacity-25 mb-4">
@@ -497,11 +511,13 @@ const Library = () => {
                           className="md:w-[200px] w-48 basis-1/2 md:basis-1/4 lg:basis-1/5 relative p-4"
                         >
                           <Link href={`/details/tv/${tv.id}`}>
-                            <ButtonFavorite
-                              id={tv.id}
-                              type="tv"
-                              onClick={removeFavorite}
-                            />
+                            <div className="absolute top-5 right-5 z-10">
+                              <ButtonFavorite
+                                id={tv.id}
+                                type="tv"
+                                onClick={removeFavorite}
+                              />
+                            </div>
                             <motion.div className="overflow-hidden rounded-lg">
                               <Image
                                 src={`https://image.tmdb.org/t/p/w500/${tv.poster_path}`}
@@ -519,8 +535,8 @@ const Library = () => {
                       ))
                     )}
                   </CarouselContent>
-                  <CarouselPrevious className="ml-5 md:ml-56 -mt-10" />
-                  <CarouselNext className="md:mr-56 mr-5 -mt-10" />
+                  <CarouselPrevious className="ml-5 md:-ml-16 -mt-10" />
+                  <CarouselNext className="mr-5 md:-mr-16 -mt-10" />
                 </Carousel>
               </>
             ),

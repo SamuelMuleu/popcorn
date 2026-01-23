@@ -19,7 +19,7 @@ export default function ButtonFavorite({ id, type, onClick, isFavorite = true }:
     <button
       onClick={handleClick}
       aria-label={isFavorite ? "Remover dos favoritos" : "Adicionar aos favoritos"}
-      className={`absolute top-5 right-4 z-10 p-2 rounded-full transition-all duration-300 hover:scale-110 ${isFavorite
+      className={`p-2 rounded-full transition-all duration-300 hover:scale-110 ${isFavorite
         ? "bg-red-700 hover:bg-red-800"
         : "bg-black hover:bg-red-800"
         }`}

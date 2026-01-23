@@ -393,18 +393,18 @@ export default function DetailPage() {
                 alt={detail.title || detail.name || "Poster"}
                 className="rounded-lg w-40 sm:w-52 h-auto"
               />
-              <div className="mt-3 relative">
-                <ButtonFavorite
-                  id={detail.id}
-                  type={type as "movie" | "tv"}
-                  onClick={saveFavorite}
-                  isFavorite={isFavorite(detail.id, type as string)}
-                />
+              <div className="mt-3 flex gap-2 justify-center sm:justify-start">
                 <ButtonWatched
                   id={detail.id}
                   type={type as "movie" | "tv"}
                   onClick={saveWatched}
                   isWatched={isWatched(detail.id, type as string)}
+                />
+                <ButtonFavorite
+                  id={detail.id}
+                  type={type as "movie" | "tv"}
+                  onClick={saveFavorite}
+                  isFavorite={isFavorite(detail.id, type as string)}
                 />
               </div>
             </div>
