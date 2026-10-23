@@ -1,4 +1,10 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Política de Privacidade",
+  description: "Saiba quais dados o Popcorn coleta, como usamos cookies e publicidade (Google AdSense) e quais são seus direitos pela LGPD.",
+  alternates: { canonical: "/privacy" },
+};
 
 export default function PrivacyPage() {
     return (
@@ -18,6 +24,11 @@ export default function PrivacyPage() {
                         <li>Preferências de filmes e séries</li>
                         <li>Histórico de visualização e favoritos</li>
                     </ul>
+                    <p className="mt-2">
+                        Se você usar o formulário de contato, recebemos o nome, o e-mail e a mensagem enviados, apenas
+                        para responder ao seu contato. Visitantes que não fazem login podem navegar pelo site sem fornecer
+                        dados pessoais.
+                    </p>
                 </section>
 
                 <section>
@@ -40,8 +51,34 @@ export default function PrivacyPage() {
                         <li>Cookies de autenticação (Firebase)</li>
                         <li>Cookies de preferências do usuário</li>
                         <li>Google AdSense (cookies de publicidade)</li>
-                        <li>Google Analytics (análise de tráfego)</li>
                     </ul>
+                </section>
+
+                <section>
+                    <h2 className="text-2xl font-semibold text-white mb-3">Publicidade (Google AdSense)</h2>
+                    <p>
+                        Este site exibe anúncios fornecidos pelo Google AdSense. Fornecedores terceiros,
+                        incluindo o Google, usam cookies para veicular anúncios com base em visitas
+                        anteriores do usuário a este e a outros sites.
+                    </p>
+                    <p className="mt-2">
+                        O uso de cookies de publicidade permite que o Google e seus parceiros exibam
+                        anúncios com base nas suas visitas a este e/ou a outros sites na Internet.
+                        Você pode desativar a publicidade personalizada nas{" "}
+                        <a href="https://adssettings.google.com" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 underline">
+                            Configurações de anúncios do Google
+                        </a>{" "}
+                        ou em{" "}
+                        <a href="https://www.aboutads.info/choices" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 underline">
+                            www.aboutads.info
+                        </a>.
+                    </p>
+                    <p className="mt-2">
+                        Saiba mais em{" "}
+                        <a href="https://policies.google.com/technologies/ads?hl=pt-BR" target="_blank" rel="noopener noreferrer" className="text-green-400 hover:text-green-300 underline">
+                            Como o Google usa cookies em publicidade
+                        </a>.
+                    </p>
                 </section>
 
                 <section>
@@ -53,6 +90,7 @@ export default function PrivacyPage() {
                         <li><strong>Google Firebase:</strong> Para autenticação e armazenamento</li>
                         <li><strong>TMDB API:</strong> Para obter informações sobre filmes e séries</li>
                         <li><strong>Google AdSense:</strong> Para exibição de anúncios personalizados</li>
+                        <li><strong>Netlify:</strong> Hospedagem do site e recebimento das mensagens do formulário de contato</li>
                     </ul>
                 </section>
 
@@ -95,7 +133,7 @@ export default function PrivacyPage() {
                 </section>
 
                 <p className="text-sm text-gray-400 mt-8">
-                    Última atualização: {new Date().toLocaleDateString("pt-BR")}
+                    Última atualização: 23/10/2026
                 </p>
             </div>
         </div>

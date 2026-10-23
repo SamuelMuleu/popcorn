@@ -20,13 +20,15 @@ interface SeasonEpisodesProps {
     seasonNumber: number;
     onToggleWatched: (seriesId: number, season: number, episode: number) => void;
     isEpisodeWatched: (seriesId: number, season: number, episode: number) => boolean;
+    onMarkAllWatched?: (seriesId: number, season: number, episodeCount: number) => void;
 }
 
 export default function SeasonEpisodes({
     seriesId,
     seasonNumber,
     onToggleWatched,
-    isEpisodeWatched
+    isEpisodeWatched,
+    onMarkAllWatched
 }: SeasonEpisodesProps) {
     const [episodes, setEpisodes] = useState<Episode[]>([]);
     const [loading, setLoading] = useState(true);
@@ -59,8 +61,38 @@ export default function SeasonEpisodes({
         return <div className="text-center py-4">Carregando episódios...</div>;
     }
 
+    // Calcular quantos episódios foram assistidos
+    const watchedCount = episodes.filter(ep =>
+        isEpisodeWatched(seriesId, seasonNumber, ep.episode_number)
+    ).length;
+    const totalCount = episodes.length;
+    const allWatched = watchedCount === totalCount && totalCount > 0;
+
     return (
         <div className="space-y-4">
+            {/* Cabeçalho com estatísticas e botão "Marcar Todos" */}
+            {episodes.length > 0 && onMarkAllWatched && (
+                <div className="flex items-center justify-between p-4 bg-gray-800/30 rounded-lg border border-gray-700/50">
+                    <div className="flex items-center gap-3">
+                        <span className="text-sm text-gray-300">
+                            <span className="font-semibold text-green-400">{watchedCount}</span>
+                            <span className="text-gray-500"> / {totalCount} episódios assistidos</span>
+                        </span>
+                    </div>
+
+                    <button
+                        onClick={() => onMarkAllWatched(seriesId, seasonNumber, totalCount)}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all duration-300 hover:scale-105 flex items-center gap-2 ${allWatched
+                                ? "bg-red-600/20 hover:bg-red-600/30 text-red-400 border border-red-600/50"
+                                : "bg-green-600/20 hover:bg-green-600/30 text-green-400 border border-green-600/50"
+                            }`}
+                    >
+                        <MdCheckCircle className="text-xl" />
+                        {allWatched ? "Desmarcar Todos" : "Marcar Todos"}
+                    </button>
+                </div>
+            )}
+
             {episodes.map((episode) => {
                 const watched = isEpisodeWatched(seriesId, seasonNumber, episode.episode_number);
 
@@ -144,6 +176,7 @@ export default function SeasonEpisodes({
                                         seriesId={seriesId}
                                         season={seasonNumber}
                                         episode={episode.episode_number}
+
                                     />
                                 </div>
                             )}

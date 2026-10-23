@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head><meta charset="utf-8" /><title>Formulários</title><meta name="robots" content="noindex" /></head>
+  <body>
+    <!-- Arquivo usado pela Netlify para detectar o formulário de contato (Netlify Forms).
+         O formulário visível fica em src/components/ContactForm.tsx e envia para este caminho. -->
+    <form name="contato" data-netlify="true" netlify-honeypot="bot-field" hidden>
+      <input type="hidden" name="form-name" value="contato" />
+      <input name="bot-field" />
+      <input name="name" />
+      <input name="email" type="email" />
+      <input name="subject" />
+      <textarea name="message"></textarea>
+    </form>
+  </body>
+</html>

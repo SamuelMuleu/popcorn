@@ -50,7 +50,7 @@ const Library = () => {
   const [movieDetails, setMovieDetails] = useState<Movie[]>([]);
   const [tvShowDetails, setTvShowDetails] = useState<Serie[]>([]);
   const [watchedMovieDetails, setWatchedMovieDetails] = useState<Movie[]>([]);
-  const { user } = useAuth();
+  const { user, loading: authLoading } = useAuth();
   const [watched, setWatched] = useState<{ id: number; type: string }[]>([]);
   const [watchingSeries, setWatchingSeries] = useState<{ seriesId: number; episodesWatched: number }[]>([]);
   const [watchingSeriesDetails, setWatchingSeriesDetails] = useState<Serie[]>([]);
@@ -136,7 +136,7 @@ const Library = () => {
             const tvShowIds = favoriteTvShows.map((tv: Favorite) => tv.id);
 
             const moviePromises = movieIds.map((id: number) =>
-              axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
+              axios.get(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
                 params: {
                   api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
                 },
@@ -144,7 +144,7 @@ const Library = () => {
             );
 
             const tvShowPromises = tvShowIds.map((id: number) =>
-              axios.get(`https://api.themoviedb.org/3/tv/${id}`, {
+              axios.get(`https://api.themoviedb.org/3/tv/${id}?language=pt-BR`, {
                 params: {
                   api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
                 },
@@ -188,7 +188,7 @@ const Library = () => {
             const movieIds = watchedMoviesList.map((movie: Favorite) => movie.id);
 
             const moviePromises = movieIds.map((id: number) =>
-              axios.get(`https://api.themoviedb.org/3/movie/${id}`, {
+              axios.get(`https://api.themoviedb.org/3/movie/${id}?language=pt-BR`, {
                 params: {
                   api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
                 },
@@ -353,6 +353,10 @@ const Library = () => {
     }
   };
 
+  if (authLoading) {
+    return <div className="flex items-center justify-center min-h-[50vh]">Carregando...</div>;
+  }
+
   if (!user) {
 
     return (
@@ -466,7 +470,7 @@ const Library = () => {
                                 />
                               </div>
 
-                              <div className="absolute bottom-[20.5rem] left-2 z-10">
+                              <div className="absolute bottom-[17rem] left-3 z-10">
                                 <ButtonWatched
                                   id={movie.id}
                                   type="movie"
@@ -560,12 +564,15 @@ const Library = () => {
                           className="md:w-[200px] w-48 basis-1/2 md:basis-1/4 lg:basis-1/5 relative p-4"
                         >
                           <Link href={`/details/movie/${movie.id}`}>
-                            <ButtonWatched
-                              id={movie.id}
-                              type="movie"
-                              onClick={removeWatched}
-                              isWatched={true}
-                            />
+                            <div className="absolute top-5 right-5 z-10">
+
+                              <ButtonWatched
+                                id={movie.id}
+                                type="movie"
+                                onClick={removeWatched}
+                                isWatched={true}
+                              />
+                            </div>
                             <motion.div className="overflow-hidden rounded-lg">
                               <Image
                                 src={`https://image.tmdb.org/t/p/w500/${movie.poster_path}`}

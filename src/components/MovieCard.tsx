@@ -24,27 +24,36 @@ import {
   arrayRemove,
 } from "firebase/firestore";
 import { motion } from "motion/react";
+import { useAuth } from "@/app/context/AuthContext";
 
 interface Movie {
   id: number;
-  title: string;
-  backdrop_path: string;
-  poster_path: string;
-  media_type: string;
+  title?: string;
+  backdrop_path: string | null;
+  poster_path: string | null;
+  media_type?: string;
 }
 
 interface Serie {
   id: number;
-  name: string;
-  backdrop_path: string;
-  media_type: string;
-  poster_path: string;
+  name?: string;
+  backdrop_path: string | null;
+  media_type?: string;
+  poster_path: string | null;
 }
 
-const MovieCard = () => {
-  const [movies, setMovies] = useState<Movie[]>([]);
-  const [series, setSeries] = useState<Serie[]>([]);
+interface MovieCardProps {
+  initialMovies?: Movie[];
+  initialSeries?: Serie[];
+}
+
+const MovieCard = ({ initialMovies, initialSeries }: MovieCardProps) => {
+  const { user } = useAuth();
+  const [movies, setMovies] = useState<Movie[]>(initialMovies || []);
+  const [series, setSeries] = useState<Serie[]>(initialSeries || []);
   const [error, setError] = useState<string | null>(null);
+  const [moviesError, setMoviesError] = useState<string | null>(null);
+  const [seriesError, setSeriesError] = useState<string | null>(null);
   const [favorites, setFavorites] = useState<{ id: number; type: string }[]>(
     []
   );
@@ -146,8 +155,8 @@ const MovieCard = () => {
 
   useEffect(() => {
     const fetchFavorites = async () => {
-      if (auth.currentUser) {
-        const userId = auth.currentUser.uid;
+      if (user) {
+        const userId = user.uid;
         const userFavoritesRef = doc(db, "favorites", userId);
         try {
           const docSnap = await getDoc(userFavoritesRef);
@@ -164,8 +173,8 @@ const MovieCard = () => {
     fetchFavorites();
 
     const fetchWatched = async () => {
-      if (auth.currentUser) {
-        const userId = auth.currentUser.uid;
+      if (user) {
+        const userId = user.uid;
         const userWatchedRef = doc(db, "watched", userId);
         try {
           const docSnap = await getDoc(userWatchedRef);
@@ -180,7 +189,7 @@ const MovieCard = () => {
       }
     };
     fetchWatched();
-  }, []);
+  }, [user]);
 
   const isFavorite = (id: number, type: string) => {
     return favorites.some((fav) => fav.id === id && fav.type === type);
@@ -194,53 +203,59 @@ const MovieCard = () => {
     const fetchMovies = async () => {
       try {
         const response = await axios.get(
-          "https://api.themoviedb.org/3/movie/popular?language=en-US&page=1",
+          "https://api.themoviedb.org/3/movie/popular",
           {
             params: {
               api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
+              language: "pt-BR",
+              region: "BR",
+              page: 1,
             },
           }
         );
 
         setMovies(response.data.results);
       } catch (err) {
-        setError("Erro ao carregar filmes. Tente novamente mais tarde.");
+        setMoviesError("Erro ao carregar filmes. Tente novamente mais tarde.");
         console.error(err);
       }
     };
 
-    fetchMovies();
-  }, []);
+    if (!initialMovies?.length) fetchMovies();
+  }, [initialMovies]);
 
   useEffect(() => {
     const fetchSeries = async () => {
       try {
+        // "page" só nos params: repetir na URL fazia o TMDB responder 400
         const response = await axios.get(
-          "https://api.themoviedb.org/3/tv/top_rated?language=en-US&page=1",
+          "https://api.themoviedb.org/3/tv/top_rated",
           {
             params: {
               api_key: process.env.NEXT_PUBLIC_TMDB_API_KEY,
-              page: "1",
+              language: "pt-BR",
+              page: 1,
             },
           }
         );
         setSeries(response.data.results);
       } catch (err) {
-        setError("Erro ao carregar series. Tente novamente mais tarde.");
+        setSeriesError("Erro ao carregar séries. Tente novamente mais tarde.");
         console.error(err);
       }
     };
 
-    fetchSeries();
-  }, []);
-
-  if (error) return <div className="text-red-500">{error}</div>;
+    if (!initialSeries?.length) fetchSeries();
+  }, [initialSeries]);
 
   return (
     <div className="min-h-screen text-white p-7">
-      <h1 className="text-2xl font-semibold mb-6 text-start opacity-25">
-        Filmes Populares
-      </h1>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
+
+      <h2 className="text-2xl font-semibold mb-6 text-start">
+        Filmes populares
+      </h2>
+      {moviesError && <p className="text-red-500">{moviesError}</p>}
 
       <Carousel
         opts={{
@@ -263,8 +278,14 @@ const MovieCard = () => {
                   className="p-2 flex flex-col items-center justify-center"
                 >
                   <div className="w-full overflow-hidden flex flex-col justify-center rounded-2xl relative">
-
-                    <div className="sm:absolute top-[2px] right-[155px] lg:absolute md:absolute ">
+                    {/* Buttons Container */}
+                    <div className="absolute top-2 left-2 md:left-10 flex gap-2 md:gap-24 z-10">
+                      <ButtonWatched
+                        id={movie.id}
+                        type="movie"
+                        onClick={saveWatched}
+                        isWatched={isWatched(movie.id, "movie")}
+                      />
                       <ButtonFavorite
                         id={movie.id}
                         type="movie"
@@ -273,20 +294,11 @@ const MovieCard = () => {
                       />
                     </div>
 
-                    <div className="sm:absolute top-[-17px] left-[20px] lg:absolute md:absolute ">
-                      <ButtonWatched
-                        id={movie.id}
-                        type="movie"
-                        onClick={saveWatched}
-                        isWatched={isWatched(movie.id, "movie")}
-                      />
-                    </div>
-
                     <Image
                       src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
                       width={200}
                       height={300}
-                      alt="movie image"
+                      alt={`Pôster de ${movie.title}`}
                       className="w-full h-auto object-cover sm:w-[150px] sm:h-[225px] md:w-[200px] md:h-[300px] lg:w-[250px] lg:object-contain lg:h-[275px]"
                     />
 
@@ -304,10 +316,11 @@ const MovieCard = () => {
       </Carousel>
 
       {/* Series */}
-      <motion.div className="mt-10">
-        <h1 className="text-2xl font-semibold mb-4 text-start opacity-25">
-          Séries Populares
-        </h1>
+      <motion.div id="series" className="mt-10 scroll-mt-20">
+        <h2 className="text-2xl font-semibold mb-4 text-start">
+          Séries mais bem avaliadas
+        </h2>
+        {seriesError && <p className="text-red-500">{seriesError}</p>}
         <Carousel
           opts={{
             align: "start",
@@ -329,7 +342,14 @@ const MovieCard = () => {
                     className="p-2 flex flex-col items-center justify-center"
                   >
                     <div className="w-full overflow-hidden rounded-2xl relative mb-10">
-                      <div className="sm:absolute top-[2px] right-[155px] lg:absolute md:absolute ">
+                      {/* Buttons Container */}
+                      <div className="absolute top-2 left-2 md:left-10 flex gap-2 md:gap-24 z-10">
+                        <ButtonWatched
+                          id={serie.id}
+                          type="tv"
+                          onClick={saveWatched}
+                          isWatched={isWatched(serie.id, "tv")}
+                        />
                         <ButtonFavorite
                           id={serie.id}
                           type="tv"
@@ -341,7 +361,7 @@ const MovieCard = () => {
                         src={`https://image.tmdb.org/t/p/w500${serie.poster_path}`}
                         width={200}
                         height={300}
-                        alt="serie image"
+                        alt={`Pôster de ${serie.name}`}
                         className="w-full h-auto object-cover sm:w-[150px] sm:h-[225px] md:w-[200px] md:h-[200px] lg:w-[250px] lg:object-contain lg:h-[275px]"
                       />
 

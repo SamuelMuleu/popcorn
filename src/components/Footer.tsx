@@ -1,83 +1,68 @@
 import Link from "next/link";
-import { MdFavorite } from "react-icons/md";
+
+const linkClass = "text-gray-400 hover:text-green-400 transition-colors text-sm";
 
 export default function Footer() {
-    const currentYear = new Date().getFullYear();
+  const currentYear = new Date().getFullYear();
 
-    return (
-        <footer className="bg-gray-900/50 border-t border-gray-800 mt-auto">
-            <div className="max-w-7xl mx-auto px-4 py-8">
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    {/* Brand */}
-                    <div>
-                        <h3 className="text-xl font-bold text-white mb-3 flex items-center gap-2">
-                            <span className="text-2xl">🍿</span> Popcorn
-                        </h3>
-                        <p className="text-gray-400 text-sm">
-                            Sua plataforma completa para descobrir, organizar e discutir filmes e séries.
-                        </p>
-                    </div>
+  return (
+    <footer className="bg-gray-950/70 border-t border-gray-800 mt-auto mb-20 md:mb-0">
+      <div className="max-w-6xl mx-auto px-4 py-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="col-span-2 md:col-span-1">
+            <p className="text-xl font-bold text-white mb-3 flex items-center gap-2">
+              <span className="text-2xl" aria-hidden="true">🍿</span> Popcorn
+            </p>
+            <p className="text-gray-400 text-sm">
+              Guia independente para descobrir filmes e séries, saber onde assistir no Brasil e organizar o que
+              você já viu.
+            </p>
+          </div>
 
-                    {/* Links Legais */}
-                    <div>
-                        <h4 className="text-white font-semibold mb-3">Legal</h4>
-                        <ul className="space-y-2">
-                            <li>
-                                <Link
-                                    href="/privacy"
-                                    className="text-gray-400 hover:text-green-400 transition-colors text-sm"
-                                >
-                                    Política de Privacidade
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/terms"
-                                    className="text-gray-400 hover:text-green-400 transition-colors text-sm"
-                                >
-                                    Termos de Uso
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/about"
-                                    className="text-gray-400 hover:text-green-400 transition-colors text-sm"
-                                >
-                                    Sobre Nós
-                                </Link>
-                            </li>
-                            <li>
-                                <Link
-                                    href="/contact"
-                                    className="text-gray-400 hover:text-green-400 transition-colors text-sm"
-                                >
-                                    Contato
-                                </Link>
-                            </li>
-                        </ul>
-                    </div>
+          <nav aria-label="Explorar">
+            <p className="text-white font-semibold mb-3">Explorar</p>
+            <ul className="space-y-2">
+              <li><Link href="/movies" className={linkClass}>Filmes e Séries</Link></li>
+              <li><Link href="/generos" className={linkClass}>Gêneros</Link></li>
+              <li><Link href="/artigos" className={linkClass}>Artigos e guias</Link></li>
+              <li><Link href="/search" className={linkClass}>Buscar</Link></li>
+            </ul>
+          </nav>
 
-                    {/* Info */}
-                    <div>
-                        <h4 className="text-white font-semibold mb-3">Informações</h4>
-                        <p className="text-gray-400 text-xs mb-2">
-                            Este produto utiliza a API do TMDB, mas não é endossado ou certificado pelo TMDB.
-                        </p>
-                        <p className="text-gray-400 text-xs">
-                            Não hospedamos conteúdo protegido por direitos autorais.
-                        </p>
-                    </div>
-                </div>
+          <nav aria-label="Institucional">
+            <p className="text-white font-semibold mb-3">Institucional</p>
+            <ul className="space-y-2">
+              <li><Link href="/about" className={linkClass}>Sobre o Popcorn</Link></li>
+              <li><Link href="/contact" className={linkClass}>Contato</Link></li>
+              <li><Link href="/privacy" className={linkClass}>Política de Privacidade</Link></li>
+              <li><Link href="/terms" className={linkClass}>Termos de Uso</Link></li>
+            </ul>
+          </nav>
 
-                <div className="border-t border-gray-800 mt-8 pt-6 flex flex-col md:flex-row justify-between items-center gap-4">
-                    <p className="text-gray-500 text-sm">
-                        © {currentYear} Popcorn. Todos os direitos reservados.
-                    </p>
-                    <p className="text-gray-500 text-sm flex items-center gap-1">
-                        Feito com <MdFavorite className="text-red-500" /> para cinéfilos
-                    </p>
-                </div>
-            </div>
-        </footer>
-    );
+          <div className="col-span-2 md:col-span-1">
+            <p className="text-white font-semibold mb-3">Fontes dos dados</p>
+            <p className="text-gray-400 text-xs mb-2">
+              Dados de filmes e séries:{" "}
+              <a href="https://www.themoviedb.org/" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-400">
+                TMDB
+              </a>
+              . Este produto utiliza a API do TMDB, mas não é endossado ou certificado pelo TMDB.
+            </p>
+            <p className="text-gray-400 text-xs mb-2">
+              Informações de onde assistir:{" "}
+              <a href="https://www.justwatch.com/br" target="_blank" rel="noopener noreferrer" className="underline hover:text-green-400">
+                JustWatch
+              </a>
+              .
+            </p>
+            <p className="text-gray-400 text-xs">Não hospedamos nem indicamos links para conteúdo protegido por direitos autorais.</p>
+          </div>
+        </div>
+
+        <div className="border-t border-gray-800 mt-8 pt-6">
+          <p className="text-gray-500 text-sm">© {currentYear} Popcorn. Todos os direitos reservados.</p>
+        </div>
+      </div>
+    </footer>
+  );
 }

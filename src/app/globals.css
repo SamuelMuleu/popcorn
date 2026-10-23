@@ -45,3 +45,18 @@ body {
 .scrollbar-custom::-webkit-scrollbar-thumb:hover {
   background: linear-gradient(to right, #059669, #047857);
 }
+/* Esconde a barra de rolagem horizontal do menu do topo */
+.scrollbar-none { scrollbar-width: none; }
+.scrollbar-none::-webkit-scrollbar { display: none; }
+
+/* Texto de artigos */
+.prose-popcorn h2 { font-size: 1.5rem; font-weight: 700; color: #fff; margin: 2rem 0 0.75rem; }
+.prose-popcorn h3 { font-size: 1.2rem; font-weight: 600; color: #fff; margin: 1.5rem 0 0.5rem; }
+.prose-popcorn p { margin: 0 0 1rem; line-height: 1.75; }
+.prose-popcorn ul, .prose-popcorn ol { margin: 0 0 1rem 1.25rem; line-height: 1.75; }
+.prose-popcorn ul { list-style: disc; }
+.prose-popcorn ol { list-style: decimal; }
+.prose-popcorn li { margin-bottom: 0.35rem; }
+.prose-popcorn a { color: #4ade80; text-decoration: underline; }
+.prose-popcorn a:hover { color: #86efac; }
+.prose-popcorn strong { color: #fff; }

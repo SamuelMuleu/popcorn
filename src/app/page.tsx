@@ -1,60 +1,117 @@
-"use client";
-
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import type { Metadata } from "next";
 import Link from "next/link";
-import { useAuth } from "@/app/context/AuthContext";
+import LoginCta from "@/components/LoginCta";
+import AdSlot from "@/components/AdSlot";
+import { PosterRow } from "@/components/PosterCard";
+import { AD_SLOTS } from "@/lib/adsense";
+import { MOVIE_GENRES, genreHref } from "@/lib/genres";
+import { ARTICLES } from "@/content/articles";
+import { toPosters } from "@/lib/poster";
+import { getNowPlaying, getPopularMovies, getTopRatedSeries, getTrending } from "@/lib/tmdb";
 
-import { motion } from "motion/react"
-export default function Home() {
-  const { user } = useAuth();
+export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+export default async function Home() {
+  const [trending, nowPlaying, popular, topSeries] = await Promise.all([
+    getTrending(),
+    getNowPlaying(),
+    getPopularMovies(),
+    getTopRatedSeries(),
+  ]);
+  const latestArticles = [...ARTICLES].sort((a, b) => b.publishedAt.localeCompare(a.publishedAt)).slice(0, 3);
 
   return (
-    <motion.section
-      initial={{ opacity: 0, y: 50 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.8, ease: "easeOut" }}
-      className="flex md:gap-2 gap-5 flex-col items-center justify-center"
-    >
-      <motion.div
-        initial={{ scale: 0.8, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-      >
-        <Avatar className="w-60 h-60 border-4 md:mt-2 mt-7 border-gradientColorStops-custom-green">
-          <AvatarImage src="/assets/popcorn.svg" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
-      </motion.div>
-
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1, ease: "easeOut" }}
-        className="text-4xl font-black p-3"
-      >
-        Procure por Filmes
-        <span className="flex items-center justify-center">e Series</span>
-      </motion.h1>
-
-
-
-      {!user ? (
-        <motion.div
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.8, ease: "easeOut", delay: 0.4 }}
-        >
-          <Link href="/signin">
-            <Button
-              aria-label="Ir para o perfil"
-              className="bg-[#31373E] rounded-xl w-44 h-14 border-2 border-gradientColorStops-custom-green hover:bg-gray-800"
-            >
-              <p className="font-black text-xl">Entre</p>
-            </Button>
+    <div className="max-w-6xl mx-auto text-white">
+      {/* Apresentação */}
+      <section className="py-10 md:py-16 text-center md:text-left md:max-w-3xl">
+        <h1 className="text-3xl md:text-5xl font-black leading-tight">
+          Descubra filmes e séries e saiba <span className="text-green-400">onde assistir</span>
+        </h1>
+        <p className="mt-4 text-lg text-gray-300">
+          O Popcorn é um guia em português para quem gosta de cinema e séries: sinopses, elenco, trailers, notas e os
+          serviços de streaming em que cada título está disponível no Brasil. Leia nossos guias, explore por gênero e
+          organize o que você já assistiu.
+        </p>
+        <div className="mt-6 flex flex-wrap gap-3 justify-center md:justify-start">
+          <Link href="/search" className="inline-flex rounded-xl bg-green-600 px-6 py-3 font-bold hover:bg-green-500">
+            Buscar um título
           </Link>
-        </motion.div>
-      ) : null}
-    </motion.section>
+          <LoginCta />
+        </div>
+      </section>
+
+      <PosterRow title="Em alta esta semana" items={toPosters(trending, "movie")} />
+      <PosterRow title="Em cartaz nos cinemas" href="/movies" items={toPosters(nowPlaying, "movie")} />
+
+      <AdSlot slot={AD_SLOTS.home} />
+
+      <PosterRow title="Filmes populares" href="/movies" items={toPosters(popular, "movie")} />
+      <PosterRow title="Séries mais bem avaliadas" href="/movies#series" items={toPosters(topSeries, "tv")} />
+
+      {/* Gêneros */}
+      <section className="mt-12">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-xl md:text-2xl font-bold">Explore por gênero</h2>
+          <Link href="/generos" className="text-sm text-green-400 hover:text-green-300">Todos os gêneros →</Link>
+        </div>
+        <ul className="flex flex-wrap gap-2">
+          {MOVIE_GENRES.map((g) => (
+            <li key={g.slug}>
+              <Link
+                href={genreHref("movie", g.slug)}
+                className="inline-block rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm hover:border-green-400 hover:text-green-300"
+              >
+                {g.name}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* Artigos */}
+      <section className="mt-12">
+        <div className="mb-3 flex items-baseline justify-between">
+          <h2 className="text-xl md:text-2xl font-bold">Guias e listas</h2>
+          <Link href="/artigos" className="text-sm text-green-400 hover:text-green-300">Todos os artigos →</Link>
+        </div>
+        <ul className="grid gap-4 md:grid-cols-3">
+          {latestArticles.map((a) => (
+            <li key={a.slug} className="rounded-xl border border-white/10 bg-gray-900/60 p-5 hover:border-green-500/50">
+              <p className="text-xs uppercase tracking-wide text-green-400">{a.category}</p>
+              <h3 className="mt-1 text-lg font-semibold leading-snug">
+                <Link href={`/artigos/${a.slug}`} className="hover:text-green-300">{a.title}</Link>
+              </h3>
+              <p className="mt-2 text-sm text-gray-400 line-clamp-3">{a.description}</p>
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* O que dá para fazer */}
+      <section className="mt-12 mb-6 grid gap-4 md:grid-cols-3">
+        <div className="rounded-xl bg-gray-900/60 p-5">
+          <h2 className="font-semibold text-lg">Onde assistir</h2>
+          <p className="mt-2 text-sm text-gray-300">
+            Cada filme e série mostra em quais serviços de streaming, aluguel ou compra ele está disponível no Brasil.
+          </p>
+        </div>
+        <div className="rounded-xl bg-gray-900/60 p-5">
+          <h2 className="font-semibold text-lg">Suas listas</h2>
+          <p className="mt-2 text-sm text-gray-300">
+            Entre com sua conta Google para salvar favoritos, marcar o que já viu e acompanhar episódios de séries.
+          </p>
+        </div>
+        <div className="rounded-xl bg-gray-900/60 p-5">
+          <h2 className="font-semibold text-lg">Comunidade</h2>
+          <p className="mt-2 text-sm text-gray-300">
+            Comente filmes, séries e episódios e veja o que outras pessoas acharam antes de dar play.
+          </p>
+        </div>
+      </section>
+    </div>
   );
 }

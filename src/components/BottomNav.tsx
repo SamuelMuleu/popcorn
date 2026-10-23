@@ -2,66 +2,53 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Button } from "@/components/ui/button";
 import { FaUserNinja, FaSearch } from "react-icons/fa";
 import { MdFavorite } from "react-icons/md";
 import { PiMonitorPlayFill, PiHouseFill } from "react-icons/pi";
 import { motion } from "motion/react";
 
+// Barra inferior estilo app — só no celular (no desktop a navegação fica no Header).
 export default function BottomNav() {
-    const pathname = usePathname();
-    const isActive = (path: string) => pathname === path;
+  const pathname = usePathname();
+  const isActive = (path: string) => pathname === path;
+  const iconClass = (active: boolean) =>
+    `${active ? "text-gradientColorStops-custom-green" : "text-white"} hover:scale-125 hover:text-gradientColorStops-custom-green transition-transform`;
 
-    return (
-        <motion.nav
-            initial={{ scale: 0.8, opacity: 0, y: 100 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
-            className="fixed bottom-0 left-0 right-0 bg-black/20 backdrop-blur-md border-t border-white/10 p-4 flex justify-around items-center z-50"
-        >
-            <Link href="/" className="text-white flex flex-col items-center">
-                <PiHouseFill
-                    size={30}
-                    className={`${isActive('/') ? "text-gradientColorStops-custom-green" : "text-white"
-                        } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green transition-transform`}
-                />
-            </Link>
+  return (
+    <motion.nav
+      aria-label="Navegação rápida"
+      initial={{ opacity: 0, y: 100 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.6, ease: "easeOut" }}
+      className="md:hidden fixed bottom-0 left-0 right-0 bg-black/40 backdrop-blur-md border-t border-white/10 p-4 flex justify-around items-center z-50"
+    >
+      <Link href="/" aria-label="Início" className={iconClass(isActive("/"))}>
+        <PiHouseFill size={28} />
+      </Link>
 
-            <Link href="/movies" className="text-white flex flex-col items-center">
-                <PiMonitorPlayFill
-                    size={30}
-                    className={`${isActive('/movies') ? "text-gradientColorStops-custom-green" : "text-white"
-                        } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green transition-transform`}
-                />
-            </Link>
+      <Link href="/movies" aria-label="Filmes e séries" className={iconClass(isActive("/movies"))}>
+        <PiMonitorPlayFill size={28} />
+      </Link>
 
-            <Link href="/search">
-                <Button className="text-white bg-gradient-to-r from-green-500 to-green-600 border border-green-400 rounded-3xl w-10 shadow-lg flex items-center justify-center -mt-7 p-6 hover:from-green-400 hover:to-green-500 focus:ring-2 focus:ring-green-300 transition-all duration-300 transform hover:scale-110">
-                    <span className="hover:scale-125 hover:text-gradientColorStops-custom-green">
-                        <FaSearch size={30} />
-                    </span>
-                </Button>
-            </Link>
+      <Link
+        href="/search"
+        aria-label="Buscar"
+        className="text-white bg-gradient-to-r from-green-500 to-green-600 border border-green-400 rounded-3xl shadow-lg flex items-center justify-center -mt-7 p-4 hover:from-green-400 hover:to-green-500 transition-all duration-300 hover:scale-110"
+      >
+        <FaSearch size={24} />
+      </Link>
 
-            <Link
-                href="/favorites"
-                className={`${isActive("/favorites")
-                        ? "text-gradientColorStops-custom-green"
-                        : "text-white"
-                    } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green transition-transform`}
-            >
-                <MdFavorite size={30} />
-            </Link>
+      <Link href="/favorites" aria-label="Favoritos" className={iconClass(isActive("/favorites"))}>
+        <MdFavorite size={28} />
+      </Link>
 
-            <Link
-                href="/signin"
-                className={`${isActive("/signin") || isActive("/register")
-                        ? "text-gradientColorStops-custom-green"
-                        : "text-white"
-                    } hover:scale-125 hover:text-gradientColorStops-custom-green active:text-gradientColorStops-custom-green transition-transform`}
-            >
-                <FaUserNinja size={30} />
-            </Link>
-        </motion.nav>
-    );
+      <Link
+        href="/signin"
+        aria-label="Minha conta"
+        className={iconClass(isActive("/signin") || isActive("/register"))}
+      >
+        <FaUserNinja size={28} />
+      </Link>
+    </motion.nav>
+  );
 }

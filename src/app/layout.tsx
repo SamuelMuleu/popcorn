@@ -1,61 +1,85 @@
 import { ReactNode } from "react";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/app/context/AuthContext";
 import VideoBackground from "@/components/VideoBackground";
 import BottomNav from "@/components/BottomNav";
+import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import JsonLd from "@/components/JsonLd";
+import { ADSENSE_CLIENT, ADSENSE_ENABLED } from "@/lib/adsense";
+import { SITE_DESCRIPTION, SITE_NAME, SITE_URL } from "@/lib/site";
 
-interface LayoutProps {
-  children: ReactNode;
-}
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Popcorn — Filmes e séries: onde assistir, sinopses e guias",
+    template: "%s | Popcorn",
+  },
+  description: SITE_DESCRIPTION,
+  applicationName: SITE_NAME,
+  openGraph: {
+    type: "website",
+    locale: "pt_BR",
+    siteName: SITE_NAME,
+    title: "Popcorn — Filmes e séries: onde assistir, sinopses e guias",
+    description: SITE_DESCRIPTION,
+    url: SITE_URL,
+  },
+  twitter: { card: "summary_large_image" },
+  icons: { icon: "/assets/popcorn.svg" },
+  robots: { index: true, follow: true },
+  ...(ADSENSE_ENABLED ? { other: { "google-adsense-account": ADSENSE_CLIENT } } : {}),
+};
 
-const Layout = ({ children }: LayoutProps) => {
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#0b1215",
+};
+
+export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR">
       <head>
-        <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-        {/* SEO Meta Tags */}
-        <title>Popcorn - Descubra e Organize Filmes e Séries</title>
-        <meta name="description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries. Crie listas de favoritos, acompanhe seu progresso em séries e compartilhe opiniões com a comunidade." />
-        <meta name="keywords" content="filmes, séries, streaming, TMDB, avaliações, recomendações, favoritos, assistir, cinema, tv shows" />
-        <meta name="author" content="Popcorn" />
-        <meta name="robots" content="index, follow" />
-
-        {/* Open Graph / Facebook */}
-        <meta property="og:type" content="website" />
-        <meta property="og:title" content="Popcorn - Descubra e Organize Filmes e Séries" />
-        <meta property="og:description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries." />
-        <meta property="og:site_name" content="Popcorn" />
-
-        {/* Twitter */}
-        <meta name="twitter:card" content="summary_large_image" />
-        <meta name="twitter:title" content="Popcorn - Descubra e Organize Filmes e Séries" />
-        <meta name="twitter:description" content="Plataforma completa para descobrir, organizar e discutir filmes e séries." />
-
-        {/* Favicon */}
-        <link rel="icon" href="/assets/popcorn.svg" />
+        {/* Google AdSense (só carrega com NEXT_PUBLIC_ADSENSE_CLIENT definido) */}
+        {ADSENSE_ENABLED && (
+          <script
+            async
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+            crossOrigin="anonymous"
+          />
+        )}
       </head>
 
       <body className="flex flex-col min-h-screen relative text-white">
-        {/* Vídeo de fundo otimizado */}
-        <VideoBackground src="/assets/example.mp4" overlayOpacity={0.6} />
+        <JsonLd
+          data={{
+            "@context": "https://schema.org",
+            "@type": "WebSite",
+            name: SITE_NAME,
+            url: SITE_URL,
+            inLanguage: "pt-BR",
+            potentialAction: {
+              "@type": "SearchAction",
+              target: `${SITE_URL}/search?q={search_term_string}`,
+              "query-input": "required name=search_term_string",
+            },
+          }}
+        />
+        <VideoBackground
+          src="/assets/background-720.mp4"
+          poster="/assets/background-poster.jpg"
+          overlayOpacity={0.6}
+        />
 
         <AuthProvider>
-          <main className="flex-1 p-4 z-0 mb-24">
-            {children}
-          </main>
-
-          {/* Footer */}
+          <Header />
+          <main className="flex-1 p-4 z-0">{children}</main>
           <Footer />
-
-          {/* Navegação inferior */}
           <BottomNav />
         </AuthProvider>
       </body>
     </html>
   );
-};
-
-export default Layout;
+}

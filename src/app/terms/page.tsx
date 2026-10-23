@@ -1,4 +1,10 @@
-"use client";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Termos de Uso",
+  description: "Regras de uso do Popcorn: contas, comentários, conteúdo de terceiros e limitações de responsabilidade.",
+  alternates: { canonical: "/terms" },
+};
 
 export default function TermsPage() {
     return (
@@ -132,7 +138,7 @@ export default function TermsPage() {
                 </section>
 
                 <p className="text-sm text-gray-400 mt-8">
-                    Última atualização: {new Date().toLocaleDateString("pt-BR")}
+                    Última atualização: 23/10/2026
                 </p>
             </div>
         </div>
