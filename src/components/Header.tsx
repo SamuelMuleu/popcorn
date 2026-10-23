@@ -25,7 +25,10 @@ export default function Header() {
           <span aria-hidden="true">🍿</span> Popcorn
         </Link>
 
-        <nav aria-label="Navegação principal" className="flex-1 overflow-x-auto scrollbar-none">
+        <nav
+          aria-label="Navegação principal"
+          className="flex-1 overflow-x-auto scrollbar-none [mask-image:linear-gradient(to_right,black_80%,transparent)] md:[mask-image:none]"
+        >
           <ul className="flex items-center gap-1 text-sm whitespace-nowrap">
             {LINKS.map((l) => (
               <li key={l.href}>

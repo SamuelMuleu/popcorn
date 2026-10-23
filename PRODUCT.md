@@ -57,8 +57,8 @@ de filmes e episódios.
 
 - Nome **Popcorn**, com o emoji 🍿 e o logo `public/assets/popcorn.svg`.
 - Projeto pessoal **assinado por Samuel Muleu**: textos com opinião e voz própria, em português do Brasil.
-- **Em aberto:** a página Sobre e os artigos ainda dizem "Equipe Popcorn" ou "pequena equipe" e precisam ser
-  migrados para a assinatura pessoal (`NEXT_PUBLIC_SITE_OWNER` e o campo `author` dos artigos).
+- Assinatura aplicada em 2026-10-23: Sobre e Contato em primeira pessoa, artigos com autor "Samuel Muleu"
+  (schema Person). O texto interno dos artigos ainda usa "nós" em alguns trechos.
 
 ## Evidence on Hand
 

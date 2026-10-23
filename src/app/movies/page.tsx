@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import MovieCard from "@/components/MovieCard";
 import AdSlot from "@/components/AdSlot";
 import { PosterRow } from "@/components/PosterCard";
 import { AD_SLOTS } from "@/lib/adsense";
@@ -32,19 +31,19 @@ export default async function MoviesPage() {
         <p className="mt-3 text-gray-300">
           Uma seleção atualizada diariamente com o que mais está sendo procurado. Clique em qualquer título para ver
           sinopse, elenco, trailer e em quais serviços ele está disponível no Brasil. Se preferir, navegue pelos{" "}
-          <Link href="/generos" className="text-green-400 underline">gêneros</Link> ou leia nossos{" "}
-          <Link href="/artigos" className="text-green-400 underline">guias e listas</Link>.
+          <Link href="/generos" className="text-green-400 underline underline-offset-2">gêneros</Link> ou leia os{" "}
+          <Link href="/artigos" className="text-green-400 underline underline-offset-2">guias e listas</Link>.
         </p>
       </header>
 
-      {/* Carrosséis interativos (favoritar/assistido) com dados já vindos do servidor */}
-      <MovieCard initialMovies={popular} initialSeries={topSeries} />
+      <PosterRow title="Filmes populares" items={toPosters(popular, "movie")} withActions />
+      <PosterRow id="series" title="Séries mais bem avaliadas" items={toPosters(topSeries, "tv")} withActions />
 
       <AdSlot slot={AD_SLOTS.movies} />
 
-      <PosterRow title="Em cartaz nos cinemas" items={toPosters(nowPlaying, "movie")} />
-      <PosterRow title="Filmes mais bem avaliados" items={toPosters(topMovies, "movie")} />
-      <PosterRow title="Séries populares agora" items={toPosters(popularSeries, "tv")} />
+      <PosterRow title="Em cartaz nos cinemas" items={toPosters(nowPlaying, "movie")} withActions />
+      <PosterRow title="Filmes mais bem avaliados" items={toPosters(topMovies, "movie")} withActions />
+      <PosterRow title="Séries populares agora" items={toPosters(popularSeries, "tv")} withActions />
     </div>
   );
 }

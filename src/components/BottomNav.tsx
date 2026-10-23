@@ -12,7 +12,7 @@ export default function BottomNav() {
   const pathname = usePathname();
   const isActive = (path: string) => pathname === path;
   const iconClass = (active: boolean) =>
-    `${active ? "text-gradientColorStops-custom-green" : "text-white"} hover:scale-125 hover:text-gradientColorStops-custom-green transition-transform`;
+    `inline-flex h-11 w-11 items-center justify-center rounded-full ${active ? "text-gradientColorStops-custom-green" : "text-white"} hover:text-gradientColorStops-custom-green focus-visible:outline focus-visible:outline-2 focus-visible:outline-green-400`;
 
   return (
     <motion.nav

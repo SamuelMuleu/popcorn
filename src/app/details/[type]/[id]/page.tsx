@@ -230,6 +230,7 @@ export default async function DetailPage({ params }: { params: Params }) {
         <PosterRow
           title={type === "movie" ? "Se você gostou, veja também" : "Séries parecidas"}
           items={recommendations.length ? recommendations : similar}
+          withActions
         />
       </DetailClient>
     </>

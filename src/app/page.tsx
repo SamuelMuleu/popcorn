@@ -44,13 +44,13 @@ export default async function Home() {
         </div>
       </section>
 
-      <PosterRow title="Em alta esta semana" items={toPosters(trending, "movie")} />
-      <PosterRow title="Em cartaz nos cinemas" href="/movies" items={toPosters(nowPlaying, "movie")} />
+      <PosterRow title="Em alta esta semana" items={toPosters(trending, "movie")} withActions />
+      <PosterRow title="Em cartaz nos cinemas" href="/movies" items={toPosters(nowPlaying, "movie")} withActions />
 
       <AdSlot slot={AD_SLOTS.home} />
 
-      <PosterRow title="Filmes populares" href="/movies" items={toPosters(popular, "movie")} />
-      <PosterRow title="Séries mais bem avaliadas" href="/movies#series" items={toPosters(topSeries, "tv")} />
+      <PosterRow title="Filmes populares" href="/movies" items={toPosters(popular, "movie")} withActions />
+      <PosterRow title="Séries mais bem avaliadas" href="/movies#series" items={toPosters(topSeries, "tv")} withActions />
 
       {/* Gêneros */}
       <section className="mt-12">
@@ -81,11 +81,11 @@ export default async function Home() {
         <ul className="grid gap-4 md:grid-cols-3">
           {latestArticles.map((a) => (
             <li key={a.slug} className="rounded-xl border border-white/10 bg-gray-900/60 p-5 hover:border-green-500/50">
-              <p className="text-xs uppercase tracking-wide text-green-400">{a.category}</p>
-              <h3 className="mt-1 text-lg font-semibold leading-snug">
+              <h3 className="text-lg font-semibold leading-snug">
                 <Link href={`/artigos/${a.slug}`} className="hover:text-green-300">{a.title}</Link>
               </h3>
               <p className="mt-2 text-sm text-gray-400 line-clamp-3">{a.description}</p>
+              <p className="mt-3 text-xs text-gray-500">{a.category} · por {a.author}</p>
             </li>
           ))}
         </ul>

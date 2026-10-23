@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/app/context/AuthContext";
+import UserListsProvider from "@/app/context/UserListsContext";
 import VideoBackground from "@/components/VideoBackground";
 import BottomNav from "@/components/BottomNav";
 import Header from "@/components/Header";
@@ -74,10 +75,12 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         />
 
         <AuthProvider>
-          <Header />
-          <main className="flex-1 p-4 z-0">{children}</main>
-          <Footer />
-          <BottomNav />
+          <UserListsProvider>
+            <Header />
+            <main className="flex-1 p-4 z-0">{children}</main>
+            <Footer />
+            <BottomNav />
+          </UserListsProvider>
         </AuthProvider>
       </body>
     </html>

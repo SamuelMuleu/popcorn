@@ -71,7 +71,7 @@ export default async function GenrePage({ params }: { params: Params }) {
           {label} de {g.name.toLowerCase()}
         </h1>
         <p className="mt-3 text-gray-300 text-lg">{g.intro}</p>
-        <p className="mt-3 rounded-lg border-l-4 border-green-500 bg-green-900/20 p-3 text-sm text-gray-200">
+        <p className="mt-4 rounded-lg bg-white/5 p-4 text-sm text-gray-200 ring-1 ring-white/10">
           <strong className="text-green-300">Dica do Popcorn:</strong> {g.tip}
         </p>
       </header>
@@ -81,7 +81,7 @@ export default async function GenrePage({ params }: { params: Params }) {
           {label} de {g.name.toLowerCase()} mais populares
         </h2>
         {items.length ? (
-          <PosterGrid items={items} />
+          <PosterGrid items={items} withActions />
         ) : (
           <p className="text-gray-400">Não conseguimos carregar a lista agora. Tente novamente em alguns minutos.</p>
         )}

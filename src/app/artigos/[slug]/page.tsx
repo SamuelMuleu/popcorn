@@ -60,7 +60,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
           datePublished: a.publishedAt,
           dateModified: a.updatedAt || a.publishedAt,
           inLanguage: "pt-BR",
-          author: { "@type": "Organization", name: a.author },
+          author: { "@type": "Person", name: a.author, url: `${SITE_URL}/about` },
           publisher: { "@type": "Organization", name: SITE_NAME, url: SITE_URL },
           mainEntityOfPage: `${SITE_URL}/artigos/${a.slug}`,
         }}
@@ -71,11 +71,10 @@ export default async function ArticlePage({ params }: { params: Params }) {
       </nav>
 
       <header className="mt-3 mb-8">
-        <p className="text-xs uppercase tracking-wide text-green-400">{a.category}</p>
-        <h1 className="mt-1 text-3xl md:text-4xl font-black leading-tight text-white">{a.title}</h1>
+        <h1 className="text-3xl md:text-4xl font-black leading-tight text-white">{a.title}</h1>
         <p className="mt-3 text-lg text-gray-300">{a.description}</p>
         <p className="mt-3 text-sm text-gray-400">
-          Por {a.author} · <time dateTime={a.publishedAt}>{formatDateBR(a.publishedAt)}</time>
+          Por <Link href="/about" className="text-gray-200 underline underline-offset-2 hover:text-white">{a.author}</Link> · {a.category} · <time dateTime={a.publishedAt}>{formatDateBR(a.publishedAt)}</time>
           {a.updatedAt && a.updatedAt !== a.publishedAt && (
             <> · atualizado em <time dateTime={a.updatedAt}>{formatDateBR(a.updatedAt)}</time></>
           )}{" "}

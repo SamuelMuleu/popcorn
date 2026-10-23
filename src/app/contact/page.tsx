@@ -4,7 +4,7 @@ import { CONTACT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contato",
-  description: "Fale com a equipe do Popcorn: dúvidas, sugestões, correções de informações ou parcerias.",
+  description: "Fale com o Popcorn: dúvidas, sugestões, correções de informações ou parcerias.",
   alternates: { canonical: "/contact" },
 };
 
@@ -16,8 +16,8 @@ export default function ContactPage() {
 
         <div className="space-y-6">
           <p className="text-gray-300 text-lg">
-            Tem alguma dúvida, sugestão ou encontrou uma informação errada? Envie uma mensagem — lemos todas e
-            respondemos pelo e-mail informado.
+            Tem alguma dúvida, sugestão ou encontrou uma informação errada? Envie uma mensagem — eu leio todas e
+            respondo pelo e-mail informado.
           </p>
 
           <ContactForm />
@@ -34,7 +34,7 @@ export default function ContactPage() {
             )}
             <p>
               <strong className="text-white">Correções:</strong> informe o link da página e o que está errado. Dados de
-              filmes vêm do TMDB; quando o erro for na base deles, também indicamos como corrigir lá.
+              filmes vêm do TMDB; quando o erro for na base deles, também explico como corrigir lá.
             </p>
             <p>
               <strong className="text-white">Privacidade:</strong> para pedir a exclusão da sua conta e dos seus dados,

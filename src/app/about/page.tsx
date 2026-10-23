@@ -6,7 +6,7 @@ import { SITE_OWNER } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Sobre o Popcorn",
   description:
-    "Conheça o Popcorn: guia independente de filmes e séries em português, de onde vêm os dados, como produzimos os artigos e como o site é mantido.",
+    "Conheça o Popcorn, guia independente de filmes e séries criado por Samuel Muleu: de onde vêm os dados, como os artigos são feitos e como o site é mantido.",
   alternates: { canonical: "/about" },
 };
 
@@ -25,7 +25,7 @@ export default function AboutPage() {
               O Popcorn é um guia independente, feito no Brasil, para quem gosta de filmes e séries. A ideia nasceu de
               uma dúvida comum: <em>&quot;onde está passando aquele filme?&quot;</em>. Aqui você encontra sinopse,
               elenco, trailer, nota do público e os serviços de streaming em que cada título está disponível no Brasil —
-              além de guias e listas escritos pela nossa equipe.
+              além de guias e listas que eu escrevo.
             </p>
           </section>
 
@@ -70,22 +70,21 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">Quem faz o Popcorn</h2>
             <p>
-              {SITE_OWNER
-                ? `O Popcorn é criado e mantido por ${SITE_OWNER}, que desenvolve o site e coordena a produção dos textos.`
-                : "O Popcorn é um projeto independente mantido por uma pequena equipe apaixonada por cinema e séries, que desenvolve o site e produz os textos."}{" "}
-              Não temos vínculo com estúdios, distribuidoras ou serviços de streaming.
+              Sou {SITE_OWNER}, desenvolvedor e apaixonado por cinema e séries. Criei o Popcorn como um projeto
+              pessoal: programo o site e escrevo os artigos, listas e textos de gêneros. O Popcorn não tem vínculo com
+              estúdios, distribuidoras ou serviços de streaming.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold text-white mb-3">Como produzimos nossos textos</h2>
+            <h2 className="text-2xl font-semibold text-white mb-3">Como os textos são feitos</h2>
             <ul className="list-disc list-inside space-y-2 ml-1">
-              <li>Artigos, listas e descrições de gêneros são escritos e revisados pela equipe do Popcorn.</li>
+              <li>Artigos, listas e descrições de gêneros são escritos e revisados por mim, com opinião própria.</li>
               <li>Informações factuais (datas, prêmios, elenco) são conferidas em fontes públicas antes da publicação.</li>
-              <li>Listas são seleções editoriais: não recebemos pagamento para incluir ou destacar títulos.</li>
+              <li>Listas são seleções pessoais: não recebo pagamento para incluir ou destacar títulos.</li>
               <li>
                 Encontrou um erro? Avise pela <Link href="/contact" className="text-green-400 underline">página de contato</Link>{" "}
-                e corrigimos o texto, indicando a data da atualização.
+                e eu corrijo o texto, indicando a data da atualização.
               </li>
             </ul>
           </section>
@@ -131,7 +130,7 @@ export default function AboutPage() {
           <section>
             <h2 className="text-2xl font-semibold text-white mb-3">Contato</h2>
             <p>
-              Dúvidas, sugestões, correções ou parcerias: fale com a gente pela{" "}
+              Dúvidas, sugestões, correções ou parcerias: fale comigo pela{" "}
               <Link href="/contact" className="text-green-400 hover:text-green-300 underline">página de contato</Link>.
             </p>
           </section>

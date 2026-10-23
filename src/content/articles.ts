@@ -13,7 +13,7 @@ export interface Article {
   body: string;
 }
 
-const AUTHOR = "Equipe Popcorn";
+const AUTHOR = "Samuel Muleu";
 
 export const ARTICLES: Article[] = [
   {

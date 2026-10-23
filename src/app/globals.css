@@ -60,3 +60,28 @@ body {
 .prose-popcorn a { color: #4ade80; text-decoration: underline; }
 .prose-popcorn a:hover { color: #86efac; }
 .prose-popcorn strong { color: #fff; }
+
+/* Botão padrão dos cards (assistido / favorito): alvo de toque de 40px */
+.card-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.45);
+  transition: background-color 160ms ease-out, transform 160ms ease-out;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+}
+.card-action:active { transform: scale(0.92); }
+.card-action:focus-visible { outline: 2px solid #4ade80; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .card-action { transition: none; }
+  .card-action:active { transform: none; }
+}
+
+/* Superfícies do navegador no tema do site */
+::selection { background: rgba(74, 222, 128, 0.35); color: #fff; }
+input, textarea { caret-color: #4ade80; accent-color: #22c55e; }
+:focus-visible { outline-color: #4ade80; }

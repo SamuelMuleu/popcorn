@@ -42,7 +42,7 @@ export default function ContactForm() {
     <>
       {status === "success" && (
         <div role="status" className="bg-green-900/30 border border-green-700 p-4 rounded-lg">
-          <p className="text-green-300">Mensagem enviada! Respondemos pelo e-mail informado, normalmente em até 3 dias úteis.</p>
+          <p className="text-green-300">Mensagem enviada! Respondo pelo e-mail informado, normalmente em até 3 dias úteis.</p>
         </div>
       )}
       {status === "error" && (
