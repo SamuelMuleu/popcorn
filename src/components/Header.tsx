@@ -21,7 +21,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-40 bg-black/40 backdrop-blur-md border-b border-white/10">
       <div className="max-w-6xl mx-auto px-4 h-14 flex items-center gap-4">
-        <Link href="/" className="flex items-center gap-2 font-black text-lg shrink-0">
+        <Link prefetch={false} href="/" className="flex items-center gap-2 font-black text-lg shrink-0">
           <span aria-hidden="true">🍿</span> Popcorn
         </Link>
 
@@ -33,6 +33,7 @@ export default function Header() {
             {LINKS.map((l) => (
               <li key={l.href}>
                 <Link
+                  prefetch={false}
                   href={l.href}
                   aria-current={active(l.href) ? "page" : undefined}
                   className={`px-3 py-2 rounded-md transition-colors ${
@@ -47,6 +48,7 @@ export default function Header() {
         </nav>
 
         <Link
+          prefetch={false}
           href={user ? "/favorites" : "/signin"}
           className="hidden md:inline-flex shrink-0 text-sm px-3 py-1.5 rounded-md border border-green-500/60 text-green-300 hover:bg-green-500/10"
         >

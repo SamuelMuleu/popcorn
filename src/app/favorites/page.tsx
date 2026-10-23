@@ -5,7 +5,7 @@ import Link from "next/link";
 import axios from "axios";
 import { doc, getDoc } from "firebase/firestore";
 import { MdFavoriteBorder } from "react-icons/md";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firestore";
 import { useAuth } from "@/app/context/AuthContext";
 import { useUserLists, type ListItem } from "@/app/context/UserListsContext";
 import { PosterGrid, type PosterItem } from "@/components/PosterCard";
@@ -38,7 +38,7 @@ function Empty({ children, href, cta }: { children: ReactNode; href: string; cta
   return (
     <div className="rounded-xl border border-dashed border-white/15 px-6 py-10 text-center">
       <p className="text-gray-300">{children}</p>
-      <Link href={href} className="mt-4 inline-flex h-11 items-center rounded-lg bg-green-600 px-5 font-semibold hover:bg-green-500">
+      <Link href={href} className="mt-4 inline-flex h-11 items-center rounded-lg bg-green-700 px-5 font-semibold hover:bg-green-600">
         {cta}
       </Link>
     </div>
@@ -169,7 +169,7 @@ export default function MyListsPage() {
           Entre com sua conta Google para salvar favoritos, marcar o que já assistiu e acompanhar os episódios das
           suas séries em qualquer dispositivo.
         </p>
-        <Link href="/signin" className="mt-6 inline-flex h-12 items-center rounded-xl bg-green-600 px-6 font-bold hover:bg-green-500">
+        <Link href="/signin" className="mt-6 inline-flex h-12 items-center rounded-xl bg-green-700 px-6 font-bold hover:bg-green-600">
           Entrar
         </Link>
       </div>

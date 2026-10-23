@@ -7,6 +7,7 @@ import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
+  browserPopupRedirectResolver,
 } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import Image from "next/image";
@@ -65,7 +66,7 @@ const Signin = () => {
     const provider = new GoogleAuthProvider();
 
     try {
-      const result = await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider, browserPopupRedirectResolver);
       const user = result.user;
       console.log("Usuário logado com Google:", user);
       setMessage("Autenticado realizado com sucesso!");

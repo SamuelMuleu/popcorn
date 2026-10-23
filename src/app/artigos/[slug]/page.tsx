@@ -66,15 +66,15 @@ export default async function ArticlePage({ params }: { params: Params }) {
         }}
       />
       <nav aria-label="Você está em" className="text-xs text-gray-400">
-        <Link href="/" className="hover:text-white">Início</Link> ›{" "}
-        <Link href="/artigos" className="hover:text-white">Artigos</Link> › <span className="text-gray-300">{a.category}</span>
+        <Link prefetch={false} href="/" className="hover:text-white">Início</Link> ›{" "}
+        <Link prefetch={false} href="/artigos" className="hover:text-white">Artigos</Link> › <span className="text-gray-300">{a.category}</span>
       </nav>
 
       <header className="mt-3 mb-8">
         <h1 className="text-3xl md:text-4xl font-black leading-tight text-white">{a.title}</h1>
         <p className="mt-3 text-lg text-gray-300">{a.description}</p>
         <p className="mt-3 text-sm text-gray-400">
-          Por <Link href="/about" className="text-gray-200 underline underline-offset-2 hover:text-white">{a.author}</Link> · {a.category} · <time dateTime={a.publishedAt}>{formatDateBR(a.publishedAt)}</time>
+          Por <Link prefetch={false} href="/about" className="text-gray-200 underline underline-offset-2 hover:text-white">{a.author}</Link> · {a.category} · <time dateTime={a.publishedAt}>{formatDateBR(a.publishedAt)}</time>
           {a.updatedAt && a.updatedAt !== a.publishedAt && (
             <> · atualizado em <time dateTime={a.updatedAt}>{formatDateBR(a.updatedAt)}</time></>
           )}{" "}
@@ -95,7 +95,7 @@ export default async function ArticlePage({ params }: { params: Params }) {
         <ul className="space-y-2">
           {others.map((o) => (
             <li key={o.slug}>
-              <Link href={`/artigos/${o.slug}`} className="text-green-400 hover:underline">{o.title}</Link>
+              <Link prefetch={false} href={`/artigos/${o.slug}`} className="text-green-400 hover:underline">{o.title}</Link>
             </li>
           ))}
         </ul>

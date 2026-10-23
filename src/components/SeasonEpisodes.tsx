@@ -76,7 +76,7 @@ export default function SeasonEpisodes({
                     <div className="flex items-center gap-3">
                         <span className="text-sm text-gray-300">
                             <span className="font-semibold text-green-400">{watchedCount}</span>
-                            <span className="text-gray-500"> / {totalCount} episódios assistidos</span>
+                            <span className="text-gray-400"> / {totalCount} episódios assistidos</span>
                         </span>
                     </div>
 
@@ -113,7 +113,7 @@ export default function SeasonEpisodes({
                                     className="rounded-lg object-cover"
                                 />
                             ) : (
-                                <div className="w-[150px] h-[85px] bg-gray-700 rounded-lg flex items-center justify-center text-gray-500">
+                                <div className="w-[150px] h-[85px] bg-gray-700 rounded-lg flex items-center justify-center text-gray-400">
                                     Sem imagem
                                 </div>
                             )}

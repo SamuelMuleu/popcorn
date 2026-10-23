@@ -22,20 +22,20 @@ export default function Footer() {
           <nav aria-label="Explorar">
             <p className="text-white font-semibold mb-3">Explorar</p>
             <ul className="space-y-2">
-              <li><Link href="/movies" className={linkClass}>Filmes e Séries</Link></li>
-              <li><Link href="/generos" className={linkClass}>Gêneros</Link></li>
-              <li><Link href="/artigos" className={linkClass}>Artigos e guias</Link></li>
-              <li><Link href="/search" className={linkClass}>Buscar</Link></li>
+              <li><Link prefetch={false} href="/movies" className={linkClass}>Filmes e Séries</Link></li>
+              <li><Link prefetch={false} href="/generos" className={linkClass}>Gêneros</Link></li>
+              <li><Link prefetch={false} href="/artigos" className={linkClass}>Artigos e guias</Link></li>
+              <li><Link prefetch={false} href="/search" className={linkClass}>Buscar</Link></li>
             </ul>
           </nav>
 
           <nav aria-label="Institucional">
             <p className="text-white font-semibold mb-3">Institucional</p>
             <ul className="space-y-2">
-              <li><Link href="/about" className={linkClass}>Sobre o Popcorn</Link></li>
-              <li><Link href="/contact" className={linkClass}>Contato</Link></li>
-              <li><Link href="/privacy" className={linkClass}>Política de Privacidade</Link></li>
-              <li><Link href="/terms" className={linkClass}>Termos de Uso</Link></li>
+              <li><Link prefetch={false} href="/about" className={linkClass}>Sobre o Popcorn</Link></li>
+              <li><Link prefetch={false} href="/contact" className={linkClass}>Contato</Link></li>
+              <li><Link prefetch={false} href="/privacy" className={linkClass}>Política de Privacidade</Link></li>
+              <li><Link prefetch={false} href="/terms" className={linkClass}>Termos de Uso</Link></li>
             </ul>
           </nav>
 
@@ -60,7 +60,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-6">
-          <p className="text-gray-500 text-sm">© {currentYear} Popcorn. Todos os direitos reservados.</p>
+          <p className="text-gray-400 text-sm">© {currentYear} Popcorn. Todos os direitos reservados.</p>
         </div>
       </div>
     </footer>

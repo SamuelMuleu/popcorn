@@ -34,6 +34,7 @@ export function PosterCard({ item, priority = false, withActions = false, badge,
     <div className="group relative">
       <Link
         href={`/details/${item.type}/${item.id}`}
+        prefetch={false}
         className="block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-green-400 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0b1215]"
       >
         <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-gray-800 shadow-[0_8px_24px_-12px_rgba(0,0,0,0.8)]">
@@ -42,7 +43,8 @@ export function PosterCard({ item, priority = false, withActions = false, badge,
               src={`https://image.tmdb.org/t/p/w342${item.posterPath}`}
               alt={`Pôster de ${item.title}`}
               fill
-              sizes="(max-width: 640px) 46vw, (max-width: 768px) 30vw, (max-width: 1024px) 23vw, 180px"
+              unoptimized
+              loading={priority ? undefined : "lazy"}
               className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
               priority={priority}
             />
@@ -132,7 +134,7 @@ export function PosterRow({
       <div className="mb-3 flex items-baseline justify-between gap-4">
         <h2 className="text-xl md:text-2xl font-bold text-balance">{title}</h2>
         {href && (
-          <Link href={href} className="shrink-0 py-2 text-sm text-green-400 hover:text-green-300">
+          <Link href={href} prefetch={false} className="shrink-0 py-2 text-sm text-green-400 hover:text-green-300">
             Ver mais →
           </Link>
         )}

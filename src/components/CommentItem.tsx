@@ -116,7 +116,7 @@ export default function CommentItem({
                             <button
                                 onClick={handleSaveEdit}
                                 disabled={isSaving || !editText.trim()}
-                                className="flex items-center gap-1 px-3 py-1 bg-green-600 hover:bg-green-700 text-white rounded-md text-sm transition-colors disabled:opacity-50"
+                                className="flex items-center gap-1 px-3 py-1 bg-green-700 hover:bg-green-700 text-white rounded-md text-sm transition-colors disabled:opacity-50"
                             >
                                 <MdCheck size={16} />
                                 Salvar

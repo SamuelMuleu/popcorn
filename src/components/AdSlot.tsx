@@ -42,7 +42,7 @@ const AdSlot = ({ slot, className = "" }: AdSlotProps) => {
       className={`w-full max-w-5xl mx-auto my-8 text-center ${className}`}
       aria-label="Publicidade"
     >
-      <span className="block text-[10px] uppercase tracking-wider text-gray-500 mb-1">
+      <span className="block text-[10px] uppercase tracking-wider text-gray-400 mb-1">
         Publicidade
       </span>
       <ins

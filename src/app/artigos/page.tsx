@@ -28,7 +28,7 @@ export default function ArticlesPage() {
                 <Link href={`/artigos/${a.slug}`} className="hover:text-green-300">{a.title}</Link>
               </h2>
               <p className="mt-2 text-gray-300">{a.description}</p>
-              <p className="mt-3 text-xs text-gray-500">
+              <p className="mt-3 text-xs text-gray-400">
                 {a.category} · {readingMinutes(a.body)} min de leitura · <time dateTime={a.publishedAt}>{formatDateBR(a.publishedAt)}</time> · {a.author}
               </p>
             </article>

@@ -12,7 +12,7 @@ import {
     serverTimestamp,
     Unsubscribe,
 } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firestore";
 import { Comment } from "@/types/comment";
 
 export interface AddCommentData {

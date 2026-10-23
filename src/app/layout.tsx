@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { preload } from "react-dom";
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import AuthProvider from "@/app/context/AuthContext";
@@ -40,6 +41,7 @@ export const viewport: Viewport = {
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
+  preload("/assets/background-poster.jpg", { as: "image", fetchPriority: "high" });
   return (
     <html lang="pt-BR">
       <head>

@@ -62,8 +62,8 @@ export default async function GenrePage({ params }: { params: Params }) {
         }}
       />
       <nav aria-label="Você está em" className="text-xs text-gray-400">
-        <Link href="/" className="hover:text-white">Início</Link> ›{" "}
-        <Link href="/generos" className="hover:text-white">Gêneros</Link> › <span className="text-gray-300">{g.name}</span>
+        <Link prefetch={false} href="/" className="hover:text-white">Início</Link> ›{" "}
+        <Link prefetch={false} href="/generos" className="hover:text-white">Gêneros</Link> › <span className="text-gray-300">{g.name}</span>
       </nav>
 
       <header className="mt-3 max-w-3xl">
@@ -95,7 +95,7 @@ export default async function GenrePage({ params }: { params: Params }) {
           <ul className="space-y-2">
             {related.map((a) => (
               <li key={a.slug}>
-                <Link href={`/artigos/${a.slug}`} className="text-green-400 hover:underline">{a.title}</Link>
+                <Link prefetch={false} href={`/artigos/${a.slug}`} className="text-green-400 hover:underline">{a.title}</Link>
               </li>
             ))}
           </ul>
@@ -108,6 +108,7 @@ export default async function GenrePage({ params }: { params: Params }) {
           {others.map((o) => (
             <li key={o.slug}>
               <Link
+                prefetch={false}
                 href={genreHref(type, o.slug)}
                 className="inline-block rounded-full border border-white/15 bg-white/5 px-4 py-1.5 text-sm hover:border-green-400 hover:text-green-300"
               >

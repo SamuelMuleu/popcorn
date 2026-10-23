@@ -37,20 +37,20 @@ export default async function Home() {
           organize o que você já assistiu.
         </p>
         <div className="mt-6 flex flex-wrap gap-3 justify-center md:justify-start">
-          <Link href="/search" className="inline-flex rounded-xl bg-green-600 px-6 py-3 font-bold hover:bg-green-500">
+          <Link href="/search" className="inline-flex rounded-xl bg-green-700 px-6 py-3 font-bold hover:bg-green-600">
             Buscar um título
           </Link>
           <LoginCta />
         </div>
       </section>
 
-      <PosterRow title="Em alta esta semana" items={toPosters(trending, "movie")} withActions />
-      <PosterRow title="Em cartaz nos cinemas" href="/movies" items={toPosters(nowPlaying, "movie")} withActions />
+      <PosterRow title="Em alta esta semana" items={toPosters(trending, "movie", 12)} withActions />
+      <PosterRow title="Em cartaz nos cinemas" href="/movies" items={toPosters(nowPlaying, "movie", 12)} withActions />
 
       <AdSlot slot={AD_SLOTS.home} />
 
-      <PosterRow title="Filmes populares" href="/movies" items={toPosters(popular, "movie")} withActions />
-      <PosterRow title="Séries mais bem avaliadas" href="/movies#series" items={toPosters(topSeries, "tv")} withActions />
+      <PosterRow title="Filmes populares" href="/movies" items={toPosters(popular, "movie", 12)} withActions />
+      <PosterRow title="Séries mais bem avaliadas" href="/movies#series" items={toPosters(topSeries, "tv", 12)} withActions />
 
       {/* Gêneros */}
       <section className="mt-12">
@@ -85,7 +85,7 @@ export default async function Home() {
                 <Link href={`/artigos/${a.slug}`} className="hover:text-green-300">{a.title}</Link>
               </h3>
               <p className="mt-2 text-sm text-gray-400 line-clamp-3">{a.description}</p>
-              <p className="mt-3 text-xs text-gray-500">{a.category} · por {a.author}</p>
+              <p className="mt-3 text-xs text-gray-400">{a.category} · por {a.author}</p>
             </li>
           ))}
         </ul>

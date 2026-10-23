@@ -7,11 +7,12 @@ import Image from "next/image";
 import { IoIosReturnLeft } from "react-icons/io";
 import StarRating from "@/components/StarRating";
 import CardActions from "@/components/CardActions";
+import TrailerLite from "@/components/TrailerLite";
 import SeasonEpisodes from "@/components/SeasonEpisodes";
 import CommentsSection from "@/components/CommentsSection";
 import { useAuth } from "@/app/context/AuthContext";
 import { arrayRemove, arrayUnion, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firestore";
 
 interface Detail {
   id: number;
@@ -334,6 +335,7 @@ export default function DetailClient({
                 height={300}
                 alt={`Pôster de ${detail.title || detail.name}`}
                 className="rounded-lg w-40 sm:w-52 h-auto"
+                unoptimized
                 priority
               />
               <div className="mt-3 flex gap-3 justify-center sm:justify-start">
@@ -388,9 +390,10 @@ export default function DetailClient({
                             <div className="w-14 h-14 rounded-lg overflow-hidden">
                               <Image
                                 src={`https://image.tmdb.org/t/p/w92${provider.logo_path}`}
-                                alt={provider.provider_name}
+                                alt=""
                                 width={56}
                                 height={56}
+                                unoptimized
                                 className="w-full h-full object-contain rounded-lg"
                               />
                             </div>
@@ -421,14 +424,7 @@ export default function DetailClient({
           <section className="mt-10 mb-10">
             <h2 className="text-xl sm:text-2xl font-semibold mb-4">Trailer</h2>
             <div className="relative w-full pb-[56.25%] h-0">
-              <iframe
-                className="absolute top-0 left-0 w-full h-full rounded-lg"
-                src={`https://www.youtube-nocookie.com/embed/${trailer.key}`}
-                title={`Trailer de ${detail.title || detail.name}`}
-                loading="lazy"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
+              <TrailerLite videoKey={trailer.key} title={detail.title || detail.name || ""} />
             </div>
           </section>
         )}

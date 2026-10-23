@@ -2,8 +2,6 @@
 
 import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-import { doc, onSnapshot, setDoc, arrayUnion } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import { useAuth } from "@/app/context/AuthContext";
 
 export type ListType = "movie" | "tv";
@@ -46,11 +44,16 @@ export default function UserListsProvider({ children }: { children: React.ReactN
       return;
     }
     let loaded = 0;
+    let cancelled = false;
+    const unsubs: (() => void)[] = [];
     const done = () => {
       loaded += 1;
       if (loaded >= 2) setReady(true);
     };
-    const unsubFav = onSnapshot(
+    // Firestore carregado só para quem está logado (não pesa nas outras visitas)
+    Promise.all([import("firebase/firestore"), import("@/lib/firestore")]).then(([{ doc, onSnapshot }, { db }]) => {
+      if (cancelled) return;
+      unsubs.push(onSnapshot(
       doc(db, "favorites", user.uid),
       (snap) => {
         setFavorites((snap.data()?.favorites as ListItem[]) || []);
@@ -60,8 +63,8 @@ export default function UserListsProvider({ children }: { children: React.ReactN
         console.error("Erro ao ler favoritos:", err);
         done();
       }
-    );
-    const unsubWatched = onSnapshot(
+    ));
+      unsubs.push(onSnapshot(
       doc(db, "watched", user.uid),
       (snap) => {
         setWatched((snap.data()?.watched as ListItem[]) || []);
@@ -71,10 +74,11 @@ export default function UserListsProvider({ children }: { children: React.ReactN
         console.error("Erro ao ler assistidos:", err);
         done();
       }
-    );
+    ));
+    });
     return () => {
-      unsubFav();
-      unsubWatched();
+      cancelled = true;
+      unsubs.forEach((u) => u());
     };
   }, [user]);
 
@@ -95,6 +99,10 @@ export default function UserListsProvider({ children }: { children: React.ReactN
       const next = has ? list.filter((x) => !same(x, id, type)) : [...list, { id, type }];
       setList(next); // resposta imediata no botão
       try {
+        const [{ doc, setDoc, arrayUnion }, { db }] = await Promise.all([
+          import("firebase/firestore"),
+          import("@/lib/firestore"),
+        ]);
         const ref = doc(db, collection, user.uid);
         // Remover regravando a lista evita falhas com itens antigos salvos com campos extras
         await setDoc(ref, { [collection]: has ? next : arrayUnion({ id, type }) }, { merge: true });

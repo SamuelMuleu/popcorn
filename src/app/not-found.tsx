@@ -9,7 +9,7 @@ export default function NotFound() {
         Esse endereço não existe ou o título foi removido da base de dados. Que tal procurar outra coisa?
       </p>
       <div className="mt-6 flex flex-wrap justify-center gap-3">
-        <Link href="/search" className="rounded-xl bg-green-600 px-5 py-2.5 font-bold hover:bg-green-500">Buscar</Link>
+        <Link href="/search" className="rounded-xl bg-green-700 px-5 py-2.5 font-bold hover:bg-green-600">Buscar</Link>
         <Link href="/movies" className="rounded-xl border border-white/20 px-5 py-2.5 hover:bg-white/5">Populares</Link>
         <Link href="/artigos" className="rounded-xl border border-white/20 px-5 py-2.5 hover:bg-white/5">Artigos</Link>
       </div>

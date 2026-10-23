@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { cache, type ReactNode } from "react";
+import { preload } from "react-dom";
 import DetailClient from "@/components/DetailClient";
 import AdSlot from "@/components/AdSlot";
 import JsonLd from "@/components/JsonLd";
@@ -80,6 +81,7 @@ export default async function DetailPage({ params }: { params: Params }) {
   if (!d) notFound();
 
   const type = typeParam as MediaType;
+  if (d.backdrop_path) preload(`https://image.tmdb.org/t/p/w1280${d.backdrop_path}`, { as: "image", fetchPriority: "high" });
   const name = titleOf(d);
   const original = originalTitleOf(d);
   const directors = d.credits?.crew.filter((c) => c.job === "Director").map((c) => c.name) || [];
@@ -112,7 +114,7 @@ export default async function DetailPage({ params }: { params: Params }) {
         return (
           <span key={g.id}>
             {i > 0 && ", "}
-            {href ? <Link href={href} className="text-green-400 hover:underline">{g.name}</Link> : g.name}
+            {href ? <Link prefetch={false} href={href} className="text-green-400 hover:underline">{g.name}</Link> : g.name}
           </span>
         );
       }),
@@ -170,18 +172,39 @@ export default async function DetailPage({ params }: { params: Params }) {
     <>
       <JsonLd data={[jsonLd, breadcrumb]} />
       <nav aria-label="Você está em" className="max-w-4xl mx-auto px-4 sm:px-7 pt-2 text-xs text-gray-400">
-        <Link href="/" className="hover:text-white">Início</Link> ›{" "}
-        <Link href="/movies" className="hover:text-white">Filmes e Séries</Link> ›{" "}
+        <Link prefetch={false} href="/" className="hover:text-white">Início</Link> ›{" "}
+        <Link prefetch={false} href="/movies" className="hover:text-white">Filmes e Séries</Link> ›{" "}
         <span className="text-gray-300">{name}</span>
       </nav>
 
       <DetailClient
         type={type}
         id={d.id}
-        initialDetail={d}
-        initialProviders={providers}
-        initialVideos={d.videos?.results || []}
-        initialSeasons={d.seasons || []}
+        initialDetail={{
+          id: d.id,
+          title: d.title,
+          name: d.name,
+          overview: d.overview,
+          poster_path: d.poster_path,
+          backdrop_path: d.backdrop_path,
+          vote_average: d.vote_average,
+          release_date: d.release_date,
+          first_air_date: d.first_air_date,
+          tagline: d.tagline,
+        }}
+        initialProviders={providers ? { flatrate: providers.flatrate, rent: providers.rent, buy: providers.buy } : null}
+        initialVideos={(d.videos?.results || [])
+          .filter((v) => v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser"))
+          .slice(0, 3)
+          .map((v) => ({ key: v.key, site: v.site, type: v.type, official: v.official }))}
+        initialSeasons={(d.seasons || []).map((s) => ({
+          id: s.id,
+          season_number: s.season_number,
+          name: s.name,
+          episode_count: s.episode_count,
+          overview: "",
+          poster_path: s.poster_path,
+        }))}
       >
         {/* FICHA TÉCNICA */}
         <section className="mt-10" aria-labelledby="ficha">
@@ -207,9 +230,10 @@ export default async function DetailPage({ params }: { params: Params }) {
                     {c.profile_path ? (
                       <Image
                         src={`https://image.tmdb.org/t/p/w185${c.profile_path}`}
-                        alt={c.name}
+                        alt=""
                         fill
-                        sizes="(max-width: 640px) 30vw, 120px"
+                        unoptimized
+                        loading="lazy"
                         className="object-cover"
                       />
                     ) : (

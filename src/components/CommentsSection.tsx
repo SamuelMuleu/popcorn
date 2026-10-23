@@ -130,7 +130,7 @@ export default function CommentsSection({
                         rows={3}
                         maxLength={500}
                     />
-                    <div className="absolute bottom-2 right-2 text-xs text-gray-500">
+                    <div className="absolute bottom-2 right-2 text-xs text-gray-400">
                         {charCount}/500
                     </div>
                 </div>
@@ -138,7 +138,7 @@ export default function CommentsSection({
                 <button
                     type="submit"
                     disabled={!newComment.trim() || isSubmitting}
-                    className="flex items-center gap-2 px-6 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center gap-2 px-6 py-2 bg-green-700 hover:bg-green-700 text-white rounded-lg font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                     <MdSend size={18} />
                     {isSubmitting ? "Enviando..." : "Enviar Comentário"}
