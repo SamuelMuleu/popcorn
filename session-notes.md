@@ -1,5 +1,19 @@
 # Popcorn — notas de sessão
 
+## 2026-10-23 (parte 4) — desempenho e mais artigos
+
+### Publicado (commit ff9bbe7)
+- Lighthouse celular: início 57 → 74, filme 52 → 74; acessibilidade 100 (antes 96). Detalhes no commit.
+- Firebase: `lib/firebase.ts` só tem app + auth (sem gapi); Firestore em `lib/firestore.ts`, carregado sob demanda.
+- Trailer com capa (`TrailerLite`), sem prefetch nos links de navegação e cards, imagens direto do TMDB.
+
+### Pendente de revisão do Samuel (NÃO publicado)
+- 11 artigos novos em `src/content/articles-2.ts` (total 20): ordem da Marvel, Homem-Aranha, família, séries
+  curtas, animes, terror para iniciantes, Oscar, remake/reboot, séries brasileiras, documentários, Natal.
+- 112 títulos citados conferidos na API do TMDB; Elena (Petra Costa) corrigido para o id 160859.
+- Os artigos têm 370–665 palavras; acrescentar opinião pessoal deixa-os mais fortes para o AdSense.
+- `Markdown.tsx` agora aceita link dentro de negrito (`**[título](/url)**`).
+
 ## 2026-10-23 (parte 2) — preparação para aprovação no AdSense
 
 ### Problemas que impediam a aprovação

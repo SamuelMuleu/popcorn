@@ -13,7 +13,8 @@ function inline(text: string): ReactNode[] {
   while ((m = re.exec(text))) {
     if (m.index > last) out.push(text.slice(last, m.index));
     if (m[1]) {
-      out.push(<strong key={k++}>{m[1]}</strong>);
+      // processa o conteúdo do negrito também (permite **[link](/url)**)
+      out.push(<strong key={k++}>{inline(m[1])}</strong>);
     } else {
       const href = m[3];
       out.push(

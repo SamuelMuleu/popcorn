@@ -2,6 +2,8 @@
 // Formato do corpo: "## " título de seção, "### " subtítulo, "- " lista, "1. " lista numerada,
 // **negrito** e [texto](/link). Parágrafos separados por linha em branco.
 
+import { MORE_ARTICLES } from "./articles-2";
+
 export interface Article {
   slug: string;
   title: string;
@@ -15,7 +17,7 @@ export interface Article {
 
 const AUTHOR = "Samuel Muleu";
 
-export const ARTICLES: Article[] = [
+const BASE_ARTICLES: Article[] = [
   {
     slug: "como-escolher-o-que-assistir",
     title: "Como escolher o que assistir: 8 dicas para sair da paralisia do catálogo",
@@ -515,6 +517,8 @@ Os dados de "onde assistir" exibidos no Popcorn são fornecidos pelo TMDB em par
 `,
   },
 ];
+
+export const ARTICLES: Article[] = [...BASE_ARTICLES, ...MORE_ARTICLES];
 
 export const getArticle = (slug: string) => ARTICLES.find((a) => a.slug === slug);
 
